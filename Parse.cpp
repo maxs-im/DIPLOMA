@@ -38,6 +38,11 @@ S Parsing::Error::get_error() const {
 	return prefix + message + (info == "" ? "" : " (" + info + ")");
 }
 
+bool Parsing::is_from_table(const V<S>& line) const {
+	S eq(1, Actions::EQUAL);
+	return std::find(line.begin(), line.end(), eq) != line.end();
+}
+
 Parsing::Error Parsing::parse_table(const V<S>& tokens) {
 	const auto& table = tokens.back();
 	auto combinations_number = pow(2, tokens.size() - 1);
@@ -140,8 +145,7 @@ Parsing::Error Parsing::parse_line(const V<S> & line) {
 		return Error(Error::ErrorsId::EMPTY, false);
 	}
 
-	S eq(1, Actions::EQUAL);
-	if (std::find(line.begin(), line.end(), eq) != line.end())
+	if (is_from_table(line))
 		return parse_polynom(line);
 	else
 		return parse_table(line);
