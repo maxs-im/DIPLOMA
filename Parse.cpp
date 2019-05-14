@@ -40,7 +40,7 @@ S Parsing::Error::get_error() const {
 
 bool Parsing::is_from_table(const V<S>& line) const {
 	S eq(1, Actions::EQUAL);
-	return std::find(line.begin(), line.end(), eq) != line.end();
+	return std::find(line.begin(), line.end(), eq) == line.end();
 }
 
 Parsing::Error Parsing::parse_table(const V<S>& tokens) {
@@ -146,9 +146,9 @@ Parsing::Error Parsing::parse_line(const V<S> & line) {
 	}
 
 	if (is_from_table(line))
-		return parse_polynom(line);
-	else
 		return parse_table(line);
+	else
+		return parse_polynom(line);
 }
 
 Parsing::Parsing(const V<V<S>>& lines) {
