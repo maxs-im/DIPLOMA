@@ -15,6 +15,7 @@ protected:
 		POSITIVE = '1'
 	};
 
+public:
 	struct Error {
 		const enum ErrorsId {
 			BIT = -1,
@@ -36,19 +37,17 @@ protected:
 		std::string get_error() const;
 	};
 
+	// storage for variable names
+	std::set<std::string> vocabulary;
+	// valid equations
+	std::vector<std::vector<std::string>> equations;
 	// storage for errors
 	std::vector<Error> errors;
+
+	Parsing(const std::vector<std::vector<std::string>>& lines);
 
 private:
 	Error parse_table(const std::vector<std::string>& tokens);
 	Error parse_polynom(const std::vector<std::string>& tokens);
 	Error parse_line(const std::vector<std::string>& line);
-
-public:
-	// storage for variable names
-	std::set<std::string> vocabulary;
-	// valid equations
-	std::vector<std::vector<std::string>> equations;
-
-	Parsing(const std::vector<std::vector<std::string>>& lines);
 };

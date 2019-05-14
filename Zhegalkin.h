@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-class System_Equations : protected Parsing {
+class System_Equations : public Parsing {
 public:
 	std::vector<unsigned int> coefficients;
 
