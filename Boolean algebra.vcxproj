@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="Read.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Parse.cpp" />
     <ClCompile Include="Zhegalkin.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Read.h" />
+    <ClInclude Include="Parse.h" />
     <ClInclude Include="Zhegalkin.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -21,6 +21,9 @@
     <ClCompile Include="Read.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="Parse.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
     <ClCompile Include="Zhegalkin.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -32,6 +35,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Read.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Parse.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Zhegalkin.h">
