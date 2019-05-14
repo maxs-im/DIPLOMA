@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Command.cpp" />
     <ClCompile Include="Read.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Parse.cpp" />
@@ -132,6 +133,7 @@
     <Text Include="test.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Command.h" />
     <ClInclude Include="Read.h" />
     <ClInclude Include="Parse.h" />
     <ClInclude Include="Zhegalkin.h" />
