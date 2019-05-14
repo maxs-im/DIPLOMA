@@ -8,7 +8,7 @@
 
 class Parsing {
 protected:
-	enum Actions {
+	const enum Actions {
 		EQUAL = '=',
 		ADD = '+',
 		NEGATIVE = '0',
@@ -16,21 +16,21 @@ protected:
 	};
 
 	struct Error {
-		enum ErrorsId {
+		const enum ErrorsId {
 			BIT = -1,
 			NONE,
 			IGNORE, INCOMPATIBILITY,
 			GENERAL, NUMBER, DUPLICATE,
 			EMPTY
 		};
-		static std::string id2str(ErrorsId id);
+		static std::string id2str(const ErrorsId id);
 
 		std::string info;
 		ErrorsId id;
 		int index;
 		bool is_Table;
 
-		Error(ErrorsId _id, bool _is_Table, const std::string& _info);
+		Error(const ErrorsId _id, bool _is_Table, const std::string& _info);
 		void set_index(int index);
 
 		std::string get_error() const;

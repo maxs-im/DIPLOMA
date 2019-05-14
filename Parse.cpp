@@ -3,13 +3,15 @@
 template<typename T> using V = std::vector<T>;
 using S = std::string;
 
-Parsing::Error::Error(ErrorsId _id, bool _is_Table, const S& _info = "") 
-	: info(_info), id(_id), is_Table(_is_Table) {};
+Parsing::Error::Error(const ErrorsId _id, bool _is_Table, const S& _info = "") 
+		: info(_info), id(_id), is_Table(_is_Table) {
+	index = -1;
+};
 void Parsing::Error::set_index(int _index) {
 	index = _index;
 }
 
-S Parsing::Error::id2str(ErrorsId id) {
+S Parsing::Error::id2str(const ErrorsId id) {
 	switch (id) {
 	case ErrorsId::IGNORE:
 		return "0 = 0 -> can be ignored";
