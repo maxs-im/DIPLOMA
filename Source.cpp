@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 		std::cout << "\n";
 	}
 	std::cout << "\nVARIABLES\n";
-	for (const auto& it : sys.ivocabulary) {
+	for (const auto& it : sys.vocabulary) {
 		std::cout << it << " ";
 	}
 	std::cout << "\nERRORS\n";

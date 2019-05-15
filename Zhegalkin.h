@@ -8,9 +8,14 @@ template<typename T> using V = std::vector<T>;
 using S = std::string;
 
 class System_Equations : public Parsing {
-	// TODO: check correctness
 	u_i num_queue(const std::string& var) const {
-		return std::find(ivocabulary.begin(), ivocabulary.end(), var) - ivocabulary.begin();
+		auto itr = vocabulary.begin();
+		for (auto i = 0; itr != vocabulary.end(); ++i, ++itr) {
+			if (*itr == var)
+				return i;
+		}
+
+		return -1;
 	}
 	
 	u_i get_coef_from_combination(const V<u_i>& vars) {
@@ -88,13 +93,11 @@ class System_Equations : public Parsing {
 	}
 
 public:
-	// duplicate of vocabulary, but in const vector for faster index search
-	const std::vector<std::string> ivocabulary;
 	std::vector<std::vector<u_i>> coefficients;
 	//std::vector<int> answers;
 
 	System_Equations(const std::vector<std::vector<std::string>>& lines)
-			: Parsing(lines), ivocabulary(vocabulary.begin(), vocabulary.end())
+			: Parsing(lines)
 	{
 		coefficients.reserve(lines.size());
 
