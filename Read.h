@@ -7,5 +7,5 @@
 #include <iterator>
 
 namespace Read {
-	std::vector<std::vector<std::string>> read_file(std::istream& stream) throw(std::string);
+	std::vector<std::vector<std::string>> read_file(std::istream& stream) throw(...);
 }
