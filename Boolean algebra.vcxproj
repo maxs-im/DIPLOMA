@@ -123,15 +123,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Command.cpp" />
     <ClCompile Include="Read.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Parse.cpp" />
     <ClCompile Include="Zhegalkin.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="test.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Command.h" />
     <ClInclude Include="Read.h" />
+    <ClInclude Include="Parse.h" />
     <ClInclude Include="Zhegalkin.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
