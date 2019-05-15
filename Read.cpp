@@ -14,7 +14,7 @@ VS split_string(const S& str) {
 	return VS(beg, end);
 }
 
-VVS Read::read_file(std::istream& stream) throw(S) {
+VVS Read::read_file(std::istream& stream) throw(...) {
 	VVS strlines(0);
 	S str;
 	if (!stream) {
