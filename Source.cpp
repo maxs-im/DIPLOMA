@@ -14,6 +14,19 @@ int main(int argc, char *argv[]) {
 	auto x = Read::read_file(file);
 	auto sys = System_Equations(x);
 
+	for (const auto& it : sys.coefficients) {
+		for (auto ii : it) {
+			std::cout << ii << " ";
+		}
+		std::cout << "\n";
+	}
+	std::cout << "\nVARIABLES\n";
+	for (const auto& it : sys.ivocabulary) {
+		std::cout << it << " ";
+	}
+
+	std::cout << std::endl;
+	
 	return 0;
 }
 
