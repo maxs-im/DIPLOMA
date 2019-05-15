@@ -24,6 +24,10 @@ int main(int argc, char *argv[]) {
 	for (const auto& it : sys.ivocabulary) {
 		std::cout << it << " ";
 	}
+	std::cout << "\nERRORS\n";
+	for (const auto& it : sys.errors) {
+		std::cout << it.get_error() << "\n";
+	}
 
 	std::cout << std::endl;
 	

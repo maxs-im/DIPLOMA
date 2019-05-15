@@ -16,7 +16,7 @@ S Parsing::Error::id2str(const ErrorsId id) {
 	case ErrorsId::IGNORE:
 		return "0 = 0 -> can be ignored";
 	case ErrorsId::INCOMPATIBILITY:
-		return "0 != 1 (incompatibility)";
+		return "0 != 1 -> incompatibility";
 	case ErrorsId::GENERAL:
 		return "Incorrect representation";
 	case ErrorsId::NUMBER:
@@ -24,7 +24,7 @@ S Parsing::Error::id2str(const ErrorsId id) {
 	case ErrorsId::EMPTY:
 		return "Empty equation";
 	case ErrorsId::DUPLICATE:
-		return "Repeated variables (incompatibility)";
+		return "Repeated variables -> incompatibility";
 	case ErrorsId::NONE:
 		return "";
 	default:
@@ -65,11 +65,30 @@ Parsing::Error Parsing::parse_table(const V<S>& tokens) {
 			return Error(Error::ErrorsId::GENERAL, true);
 	}
 
-	for (auto chr : table) {
+	// case with all null x y 0000  <=>  0 = 0
+	bool ignore = true;
+	for (int i = 0; i < table.length(); ++i) {
 		// "x y 1?00"
-		if (chr != Actions::NEGATIVE && chr != Actions::POSITIVE) {
-			return Error(Error::ErrorsId::BIT, true, S(1, chr));
+		switch (table[i])
+		{
+		case Actions::NEGATIVE:
+			continue;
+		case Actions::POSITIVE:
+			if (ignore && (i == table.length() - 1)) {
+				// x 01  <=>  1 = 0
+				return Error(Error::ErrorsId::INCOMPATIBILITY, true, "0...01 case without variables");
+			}
+			else {
+				ignore = false;
+			}
+			continue;
+		default:
+			return Error(Error::ErrorsId::BIT, true, S(1, table[i]));
 		}
+	}
+
+	if (ignore) {
+		return Error(Error::ErrorsId::IGNORE, true, "0..0 case without variables");
 	}
 
 	std::unordered_set<S> buf_variables(tokens.begin(), tokens.end() - 1);
