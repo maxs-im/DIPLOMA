@@ -176,7 +176,7 @@ Parsing::Parsing(const V<V<S>>& lines) {
 
 		if (std::find(line.begin(), line.end(), "") != line.end()) {
 			// UNREACHABLE
-			throw "Something goes wrong with reading. Contact to developers!\n";
+			throw "Something goes wrong with reading. Contact to developers!";
 		}
 
 		auto error = parse_line(line);
