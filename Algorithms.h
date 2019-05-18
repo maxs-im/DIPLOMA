@@ -83,24 +83,18 @@ class Quine : public Method {
 		{}
 
 		int count(const u_i coef) const {
-			if (coef == 0) {
-				return -1;
-			}
-
 			u_i number = get_number();
 			if (positive) {
-				auto new_val = (coef & (~number));
-				// -1 - means add positive value
-				return (new_val == number) ? -1 : new_val;
+				return coef & (~number);
 			}
 			else {
-				return ((coef & number) > 0) ? 0 : coef;
+				return ((coef & number) == 0) ? coef : -1;
 			}
 		}
 
 		friend u_i operator+ (const Value& val, const u_i vec) {
 			auto number = val.get_number();
-			return val.positive ? (vec | number) : (vec & number);
+			return val.positive ? (vec | number) : (vec & (~number));
 		}
 
 	private:
@@ -115,17 +109,12 @@ class Quine : public Method {
 			
 			for (int i = 0; i < equation.size(); ++i) {
 				int new_val = val.count(equation[i]);
-				switch (new_val)
-				{
-				// polynom X_n -> X_n set 1 -> get 1
-				case -1: 
-					equation[i] = 0;
-					break;
-				case 0: 
+				if (new_val == -1) {
+					// polynom = zero
 					equation.erase(equation.begin() + i);
 					i--;
-					break;
-				default:
+				}
+				else {
 					equation[i] = new_val;
 				}
 			}
@@ -169,7 +158,7 @@ class Quine : public Method {
 			}
 		}
 
-		return 0;
+		return -1;
 	}
 
 	// like dfs
@@ -180,7 +169,11 @@ class Quine : public Method {
 			return;
 		}
 
-		auto index = get_nearest_var(coefs);
+		int index = get_nearest_var(coefs);
+		if (index == -1) {
+			// UNREACHABLE
+			return;
+		}
 		// Positive
 		set_value(coefs, vec, Value(index, true));
 		// Negative

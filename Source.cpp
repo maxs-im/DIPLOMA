@@ -12,15 +12,7 @@ int main(int argc, char *argv[]) {
 	
 	std::ifstream file("test.txt");
 	auto x = Read::read_file(file);
-	{
-		auto sys = System_Equations(x);
-		{
-			std::cout << "\n\n\t\tANSWERS\n";
-			for (auto it : sys.resolve()) {
-				std::cout << it << " ";
-			}
-		}
-	}
+	auto sys = System_Equations(x);
 	/*
 	for (const auto& it : sys.coefficients) {
 		for (auto ii : it) {
@@ -36,12 +28,11 @@ int main(int argc, char *argv[]) {
 	for (const auto& it : sys.errors) {
 		std::cout << it.get_error() << "\n";
 	}
-
+	*/
 	std::cout << "\n\n\t\tANSWERS\n";
 	for (auto it : sys.resolve()) {
 		std::cout << it << " ";
 	}
-	*/
 	
 	return 0;
 }
