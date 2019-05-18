@@ -13,15 +13,13 @@ protected:
 	std::vector<unsigned int> convert_table(const std::vector<std::string>& line);
 	std::vector<unsigned int> convert_polynom(const std::vector<std::string>& line);
 
+	std::shared_ptr<Solution> algo;
 public:
 	std::vector<std::vector<unsigned int>> coefficients;
-	//Method* answers = nullptr;
 
-	void solve() {
-		//if (!answers) {
-			auto algo = Solution(coefficients, vocabulary.size());
-
-		//}
+	std::vector<unsigned int> resolve() {
+		// TODO: finish with named variables
+		return algo->solve();
 	}
 
 	System_Equations(const std::vector<std::vector<std::string>>& lines);

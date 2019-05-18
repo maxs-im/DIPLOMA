@@ -101,4 +101,6 @@ System_Equations::System_Equations(const V<V<S>>& lines)
 			coefficients.push_back(convert_polynom(equation));
 		}
 	}
+
+	algo = std::make_shared<Solution>(coefficients, vocabulary.size());
 }

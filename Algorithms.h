@@ -2,6 +2,7 @@
 #include <vector>
 #include <memory>
 #include <functional>
+#include <unordered_set> 
 
 template<typename T> using V = std::vector<T>;
 using u_i = unsigned int;
@@ -33,7 +34,7 @@ public:
 					throw "Range is incorrect for Solution";
 	}
 
-	V<V<u_i>> solve();
+	V<u_i> solve();
 };
 
 // interface for our algorithms
@@ -45,8 +46,8 @@ protected:
 	}
 public:
 	Method(const std::shared_ptr<Solution> _data) : data_ptr(_data) {};
-	V<V<bool>> answers; 
-	virtual V<V<bool>> solve() {
+	V<u_i> answers; 
+	virtual V<u_i> solve() {
 		return answers;
 	}
 
@@ -54,19 +55,37 @@ public:
 
 class Quine : public Method {
 	void reduce(V<u_i>& equation) {
+		std::unordered_set<u_i> buff;
+		for (const auto& it : equation) {
+			auto look = buff.find(it);
+			if (look == buff.end()) {
+				buff.insert(it);
+			}
+			else {
+				buff.erase(look);
+			}
+		}
 
+		// if changed
+		if (buff.size() != equation.size())
+			equation = V<u_i>(buff.begin(), buff.end());
 	}
 
 	struct Value {
-		const u_i number;
+		const u_i index;
 		const bool positive;
 
-		Value(u_i index, bool _positive = true) :
-			number(1 << index),
+		Value(u_i _index, bool _positive = true) :
+			index(_index),
 			positive(_positive)
 		{}
 
-		u_i count(const u_i coef) const {
+		int count(const u_i coef) const {
+			if (coef == 0) {
+				return -1;
+			}
+
+			u_i number = get_number();
 			if (positive) {
 				auto new_val = (coef & (~number));
 				// -1 - means add positive value
@@ -76,13 +95,24 @@ class Quine : public Method {
 				return ((coef & number) > 0) ? 0 : coef;
 			}
 		}
+
+		friend u_i operator+ (const Value& val, const u_i vec) {
+			auto number = val.get_number();
+			return val.positive ? (vec | number) : (vec & number);
+		}
+
+	private:
+		u_i get_number() const {
+			return 1 << index;
+		}
 	};
 
 	bool update_coefs(V<V<u_i>>& coefs, const Value& val) {
 		for (int li = 0; li < coefs.size(); ++li) {
 			V<u_i>& equation = coefs[li];
+			
 			for (int i = 0; i < equation.size(); ++i) {
-				auto new_val = val.count(equation[i]);
+				int new_val = val.count(equation[i]);
 				switch (new_val)
 				{
 				// polynom X_n -> X_n set 1 -> get 1
@@ -97,8 +127,8 @@ class Quine : public Method {
 					equation[i] = new_val;
 				}
 			}
-
 			reduce(equation);
+			
 			// incompatibility
 			if ((equation.size() == 1) && equation[0] == 0) {
 				// 1 = 0
@@ -113,27 +143,46 @@ class Quine : public Method {
 		return true;
 	}
 
-	void set_value(const V<V<u_i>>& coefs, V<bool>& values, const Value& val) {
-		auto new_coefs(coefs);
-		if (update_coefs(new_coefs, val)) {
-			values.push_back(val.positive);
-			if (new_coefs.empty()) {
-				answers.push_back(values);
-			}
-			else {
-				step(new_coefs, values);
-			}
-			values.pop_back();
+	void set_value(V<V<u_i>> coefs, const u_i vec, const Value& val) {
+		if (update_coefs(coefs, val)) {
+			step(coefs, val + vec);
 		}
 	}
 
-	// like dfs
-	void step(const V<V<u_i>>& coefs, V<bool>& values) {
-		for (u_i i = values.size(); i <= data_ptr->range; ++i) {
-			auto index = data_ptr->range - i;
-			set_value(coefs, values, Value(index, true));
-			set_value(coefs, values, Value(index, false));
+	// find first unknown variable in current @coefs
+	u_i get_nearest_var(const V<V<u_i>>& coefs) {
+		for (const auto& l_it : coefs) {
+			for (const auto& it : l_it) {
+				if (it > 0) {
+					u_i pos = 0;
+					u_i mask = 1;
+
+					while (!(mask & it)) {
+						mask <<= 1;
+						++pos;
+					}
+
+					return pos;
+				}
+			}
 		}
+
+		return 0;
+	}
+
+	// like dfs
+	void step(const V<V<u_i>>& coefs, u_i vec = 0) {
+		if (coefs.empty()) {
+			// add new solution
+			answers.push_back(vec);
+			return;
+		}
+
+		auto index = get_nearest_var(coefs);
+		// Positive
+		set_value(coefs, vec, Value(index, true));
+		// Negative
+		set_value(coefs, vec, Value(index, false));
 	}
 
 public:
@@ -143,12 +192,9 @@ public:
 			invalid_call();
 	}
 
-public:
-	V<V<bool>> solve() {
+	V<u_i> solve() {
 		answers.clear();
-		V<bool> buffer;
-		buffer.reserve(data_ptr->range + 1);
-		step(data_ptr->coefficients, buffer);
+		step(data_ptr->coefficients);
 		return answers;
 	}
 };
