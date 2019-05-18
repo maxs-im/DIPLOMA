@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
-#include <functional>
 #include <unordered_set> 
+#include <utility>
 
 template<typename T> using V = std::vector<T>;
 using u_i = unsigned int;
@@ -17,6 +17,7 @@ class Solution {
 
 		return true;
 	}
+
 public:
 	const V<V<u_i>>& coefficients;
 	const u_i range;
@@ -39,23 +40,6 @@ public:
 // interface for our algorithms
 class Method {
 protected:
-	const Solution* data_ptr;
-	void invalid_call() const throw(...) {
-		throw "Invalid method choice. Contact to developers!";
-	}
-public:
-	Method(const Solution* _data) : data_ptr(_data) {
-		if (data_ptr == nullptr)
-			throw "Inccorect pointer. Contact to developers!";
-	};
-	V<u_i> answers; 
-	virtual V<u_i> solve() {
-		return answers;
-	}
-
-};
-
-class Quine : public Method {
 	void reduce(V<u_i>& equation) {
 		std::unordered_set<u_i> buff;
 		for (const auto& it : equation) {
@@ -73,6 +57,23 @@ class Quine : public Method {
 			equation = V<u_i>(buff.begin(), buff.end());
 	}
 
+	const Solution* data_ptr;
+	void invalid_call() const throw(...) {
+		throw "Invalid method choice. Contact to developers!";
+	}
+public:
+	Method(const Solution* _data) : data_ptr(_data) {
+		if (data_ptr == nullptr)
+			throw "Inccorect pointer. Contact to developers!";
+	};
+	V<u_i> answers; 
+	virtual V<u_i> solve() {
+		return answers;
+	}
+
+};
+
+class Quine : public Method {
 	struct Value {
 		const u_i index;
 		const bool positive;
@@ -195,9 +196,126 @@ public:
 };
 
 class TSS : public Method {
+	// TODO: inline??!!
+	u_i get_null_value() {
+		return 1 << data_ptr->range;
+	}
+
+	V<V<u_i>> prepare_coefs(V<V<u_i>> coefs) throw(...) {
+		for (int i = 0; i < coefs.size(); ++i) {
+			auto& equation = coefs[i];
+			reduce(equation);
+			if ((equation.size() == 1) && equation[0] == 0) {
+				// 1 = 0
+				throw "Incorrect parsing for TSS. Contact to developers";
+			}
+			if (equation.size() == 0) {
+				coefs.erase(coefs.begin() + i);
+				--i;
+			}
+		}
+
+		return coefs;
+	}
+
+	V<u_i> get_start_vectors(const V<u_i>& first) {
+		V<u_i> vectors;
+		vectors.reserve(first.size() - 1);
+
+		for (u_i i = 0; i < first.size(); ++i) {
+			if (first[i] > 0) {
+				u_i pillar = first[i];
+				for (u_i j = 0; j < first.size(); ++j) {
+					if (i == j) {
+						continue;
+					}
+
+					auto eq_pillar = (first[j] == 0) ? get_null_value() : first[j];
+					vectors.push_back(pillar + first[j]);
+				}
+			}
+		}
+
+		return vectors;
+	}
+
+	bool multiply(const V<u_i>& equation, const u_i value) {
+		bool ans = false;
+		for (const auto& it : equation) {
+			auto curr = (it != 0) ? it : get_null_value();
+			if ((value & curr) > 0) {
+				ans = !ans;
+			}
+		}
+
+		return ans;
+	}
+
+	u_i calcul_sum(const V<u_i>& coefs, const u_i vec) {
+		u_i ans = 0;
+		for (const auto it : coefs) {
+			if ((it & vec) > 0) {
+				ans ^= it;
+			}
+		}
+		return ans;
+	}
+
+	V<u_i> add_equation(const V<u_i>& equation, const V<u_i>& vectors) {
+		V<u_i> tmp_coef;
+		tmp_coef.reserve(vectors.size());
+
+		for (u_i i = 0; i < vectors.size(); ++i) {
+			if (multiply(equation, vectors[i])) {
+				tmp_coef.push_back(1 << i);
+			}
+		}
+		if (tmp_coef.size() == 0) {
+			// same equations (prev + current)
+			return equation;
+		}
+
+		V<u_i>	tmp_vec(get_start_vectors(tmp_coef)),
+				ans;
+		ans.reserve(tmp_vec.size());
+		for (const auto& it : tmp_vec) {
+			ans.push_back(calcul_sum(tmp_coef, it));
+		}
+
+		return ans;
+	}
+
 public:
 	TSS(const Solution* solution) : Method(solution) {
 		if (!data_ptr->linear)
 			invalid_call();
+	}
+
+	// first -> individual, second -> basis
+	std::pair<V<u_i>, V<u_i>> separate_solutions(const V<u_i>& vec) {
+		V<u_i> indiv, basis;
+		for (const auto it : vec) {
+			if ((it & get_null_value()) > 0) {
+				indiv.push_back(it);
+			}
+			else {
+				basis.push_back(it);
+			}
+		}
+		return std::make_pair(indiv, basis);
+	}
+
+	V<u_i> solve() {
+		auto upd_coefs = prepare_coefs(data_ptr->coefficients);
+		if (upd_coefs.size() == 0) {
+			return { 0 };
+		}
+
+		auto set_vec = get_start_vectors(upd_coefs.front());
+		for (u_i i = 1; i < upd_coefs.size(); ++i) {
+			set_vec = add_equation(upd_coefs[i], set_vec);
+		}
+
+		return set_vec;
 	}
 };
