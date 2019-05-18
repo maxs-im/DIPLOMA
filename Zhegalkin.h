@@ -18,10 +18,10 @@ public:
 	//Method* answers = nullptr;
 
 	void solve() {
-		if (!answers) {
+		//if (!answers) {
 			auto algo = Solution(coefficients, vocabulary.size());
 
-		}
+		//}
 	}
 
 	System_Equations(const std::vector<std::vector<std::string>>& lines);

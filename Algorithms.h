@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <memory>
 
 template<typename T> using V = std::vector<T>;
 using u_i = unsigned int;
@@ -31,23 +32,20 @@ public:
 					throw "Range is incorrect for Solution";
 	}
 
-	V<V<u_i>> solve() {
-		auto vectors = linear ? Quine(*this).solve() : TSS(*this).solve();
-		return {};
-	}
+	V<V<u_i>> solve();
 };
 
 // interface for our algorithms
 class Method {
 protected:
-	const Solution data;
+	const std::shared_ptr<Solution> data_ptr;
 	void invalid_call() const throw(...) {
 		throw "Invalid method choice. Contact to developers!";
 	}
 public:
-	Method(const Solution& _data) : data(_data) {};
+	Method(const std::shared_ptr<Solution> _data) : data_ptr(_data) {};
 	V<V<bool>> answers; 
-	virtual V<V<bool>> solve() const {
+	virtual V<V<bool>> solve() {
 		return answers;
 	}
 
@@ -55,29 +53,31 @@ public:
 
 class Quine : public Method {
 	V<V<bool>> step(V<V<u_i>> coefs, V<bool>& values) {
-		for (u_i i = values.size(); i <= data.range; ++i) {
+		for (u_i i = values.size(); i <= data_ptr->range; ++i) {
 			
 		}
+
 		return {};
 	}
 
 public:
-	Quine(const Solution& solution) : Method(solution) {
-		if (data.linear)
+	Quine(const std::shared_ptr<Solution>& solution) : Method(solution) {
+		if (data_ptr->linear)
 			invalid_call();
 	}
 
+public:
 	V<V<bool>> solve() {
 		V<bool> buffer;
-		buffer.reserve(data.range + 1);
-		return step(data.coefficients, buffer);
+		buffer.reserve(data_ptr->range + 1);
+		return step(data_ptr->coefficients, buffer);
 	}
 };
 
 class TSS : public Method {
 public:
-	TSS(const Solution& solution) : Method(solution) {
-		if (!data.linear)
+	TSS(const std::shared_ptr<Solution>& solution) : Method(solution) {
+		if (!data_ptr->linear)
 			invalid_call();
 	}
 };
