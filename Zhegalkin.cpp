@@ -102,5 +102,5 @@ System_Equations::System_Equations(const V<V<S>>& lines)
 		}
 	}
 
-	algo = std::make_shared<Solution>(coefficients, vocabulary.size());
+	algo = std::make_unique<Solution>(coefficients, vocabulary.size());
 }

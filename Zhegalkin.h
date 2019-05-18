@@ -1,6 +1,7 @@
 #pragma once
 #include "Parse.h"
 #include "Algorithms.h"
+#include <memory>
 
 class System_Equations : public Parsing {
 protected:
@@ -13,7 +14,7 @@ protected:
 	std::vector<unsigned int> convert_table(const std::vector<std::string>& line);
 	std::vector<unsigned int> convert_polynom(const std::vector<std::string>& line);
 
-	std::shared_ptr<Solution> algo;
+	std::unique_ptr<Solution> algo;
 public:
 	std::vector<std::vector<unsigned int>> coefficients;
 

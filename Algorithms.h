@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include <memory>
 #include <functional>
 #include <unordered_set> 
 
@@ -40,12 +39,15 @@ public:
 // interface for our algorithms
 class Method {
 protected:
-	const std::shared_ptr<Solution> data_ptr;
+	const Solution* data_ptr;
 	void invalid_call() const throw(...) {
 		throw "Invalid method choice. Contact to developers!";
 	}
 public:
-	Method(const std::shared_ptr<Solution> _data) : data_ptr(_data) {};
+	Method(const Solution* _data) : data_ptr(_data) {
+		if (data_ptr == nullptr)
+			throw "Inccorect pointer. Contact to developers!";
+	};
 	V<u_i> answers; 
 	virtual V<u_i> solve() {
 		return answers;
@@ -187,7 +189,7 @@ class Quine : public Method {
 
 public:
 	// Note: zero coefficient means Positive value for equation
-	Quine(const std::shared_ptr<Solution>& solution) : Method(solution) {
+	Quine(const Solution* solution) : Method(solution) {
 		if (data_ptr->linear)
 			invalid_call();
 	}
@@ -201,7 +203,7 @@ public:
 
 class TSS : public Method {
 public:
-	TSS(const std::shared_ptr<Solution>& solution) : Method(solution) {
+	TSS(const Solution* solution) : Method(solution) {
 		if (!data_ptr->linear)
 			invalid_call();
 	}
