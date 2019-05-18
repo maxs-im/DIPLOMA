@@ -15,7 +15,6 @@ class Solution {
 
 		return true;
 	}
-
 public:
 	const V<V<u_i>>& coefficients;
 	const u_i range;
@@ -33,35 +32,52 @@ public:
 	}
 
 	V<V<u_i>> solve() {
-		return linear ? Quine(*this).solve() : TSS(*this).solve();
+		auto vectors = linear ? Quine(*this).solve() : TSS(*this).solve();
+		return {};
 	}
 };
 
 // interface for our algorithms
 class Method {
 protected:
+	const Solution data;
 	void invalid_call() const throw(...) {
 		throw "Invalid method choice. Contact to developers!";
 	}
 public:
-	V<V<u_i>> answers; 
-	virtual V<V<u_i>> solve() const {
+	Method(const Solution& _data) : data(_data) {};
+	V<V<bool>> answers; 
+	virtual V<V<bool>> solve() const {
 		return answers;
 	}
+
 };
 
 class Quine : public Method {
+	V<V<bool>> step(V<V<u_i>> coefs, V<bool>& values) {
+		for (u_i i = values.size(); i <= data.range; ++i) {
+			
+		}
+		return {};
+	}
+
 public:
-	Quine(const Solution& solution) {
-		if (solution.linear)
+	Quine(const Solution& solution) : Method(solution) {
+		if (data.linear)
 			invalid_call();
+	}
+
+	V<V<bool>> solve() {
+		V<bool> buffer;
+		buffer.reserve(data.range + 1);
+		return step(data.coefficients, buffer);
 	}
 };
 
 class TSS : public Method {
 public:
-	TSS(const Solution& solution) {
-		if (!solution.linear)
+	TSS(const Solution& solution) : Method(solution) {
+		if (!data.linear)
 			invalid_call();
 	}
 };
