@@ -36,16 +36,27 @@ V<u_i> System_Equations::get_set_bits(u_i n) {
 	return nums;
 }
 
+V<u_i> System_Equations::convert_to_real(V<u_i> bits, const V<S>& vars) {
+	for (auto& local : bits) {
+		local = num_queue(vars[local]);
+	}
+	return bits;
+}
+
 V<u_i> System_Equations::convert_table(const V<S> & line) {
 	V<u_i> coefs;
 	coefs.reserve(line.size());
-	const auto& table = line.back();
+	const S& table = line.back();
+	const V<S> local_vars(line.begin(), line.end() - 1);
 
 	for (u_i i = 0; i < table.length(); ++i) {
 		if (table[i] == Actions::POSITIVE) {
 			// b"10" = 2 (not 1)
 			auto index = table.length() - i - 1;
-			auto coef = get_coef_from_combination(get_set_bits(index));
+			auto local_bits = get_set_bits(index);
+			auto real_bits = convert_to_real(local_bits, local_vars);
+
+			auto coef = get_coef_from_combination(real_bits);
 			coefs.push_back(coef);
 		}
 	}

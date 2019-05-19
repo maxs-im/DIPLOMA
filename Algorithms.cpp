@@ -216,8 +216,11 @@ V<u_i> TSS::get_start_vectors(const V<u_i> & first, u_i range) {
 	vectors.reserve(range - 1);
 
 	u_i pillar = first.front();
-	for (u_i j = 1; j < range; ++j) {
+	for (u_i j = 0; j < range; ++j) {
 		auto eq_pillar = 1 << j;
+		if (pillar == eq_pillar) {
+			continue;
+		}
 		u_i lor;
 		if (std::find(first.begin(), first.end(), eq_pillar) != first.end()) {
 			lor = pillar + eq_pillar;
@@ -263,7 +266,7 @@ V<u_i> TSS::add_equation(const V<u_i> & equation, const V<u_i> & vectors) {
 	}
 	if (tmp_coef.size() == 0) {
 		// same equations (prev + current)
-		return equation;
+		return vectors;
 	}
 
 	V<u_i>	tmp_vec(get_start_vectors(tmp_coef, vectors.size())),
