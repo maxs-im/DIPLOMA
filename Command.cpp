@@ -18,3 +18,35 @@ CommandParser::CommandParser(int argc, char* argv[]) {
 	for (int i = 1; i < argc; ++i)
 		tokens.push_back(std::string(argv[i]));
 }
+
+Options::Options() :
+	help(false),
+	logs(false),
+	timer(false),
+	input_file(&std::cin),
+	output_file(&std::cout)
+{}
+
+Options CMDHelper::work_with_cmd(const CommandParser& cmd) {
+	Options opt;
+	// help
+	opt.help = cmd.is_exists("-h");
+	// errors logs
+	opt.logs = cmd.is_exists("-l");
+	// timer
+	opt.timer = cmd.is_exists("-t");
+
+	std::string command;
+	// input file
+	command = "-f";
+	if (cmd.is_exists(command)) {
+		opt.input_file = &std::ifstream(cmd.get_value(command));
+	}
+	// output file
+	command = "o";
+	if (cmd.is_exists(command)) {
+		opt.output_file = &std::ofstream(cmd.get_value(command));
+	}
+
+	return opt;
+}
