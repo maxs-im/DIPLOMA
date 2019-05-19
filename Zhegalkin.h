@@ -1,9 +1,10 @@
 #pragma once
 #include "Parse.h"
-
-#include <iostream>
+#include "Algorithms.h"
+#include <memory>
 
 class System_Equations : public Parsing {
+protected:
 	unsigned int num_queue(const std::string& var) const;
 	
 	unsigned int get_coef_from_combination(const std::vector<unsigned int>& vars);
@@ -13,9 +14,11 @@ class System_Equations : public Parsing {
 	std::vector<unsigned int> convert_table(const std::vector<std::string>& line);
 	std::vector<unsigned int> convert_polynom(const std::vector<std::string>& line);
 
+	std::unique_ptr<Solution> algo;
 public:
 	std::vector<std::vector<unsigned int>> coefficients;
-	//std::vector<int> answers;
+
+	std::pair<std::vector<unsigned int>, std::vector<unsigned int>> resolve();
 
 	System_Equations(const std::vector<std::vector<std::string>>& lines);
 };

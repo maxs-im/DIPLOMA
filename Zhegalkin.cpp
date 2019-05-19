@@ -101,4 +101,10 @@ System_Equations::System_Equations(const V<V<S>>& lines)
 			coefficients.push_back(convert_polynom(equation));
 		}
 	}
+
+	algo = std::make_unique<Solution>(coefficients, vocabulary.size());
+}
+
+std::pair<V<u_i>, V<u_i>> System_Equations::resolve() {
+	return algo->solve();
 }
