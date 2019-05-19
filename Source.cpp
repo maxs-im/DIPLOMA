@@ -7,19 +7,7 @@
 #include <fstream>
 
 template<typename T, typename F>
-bool try_file(const T& stream, F& file, std::string& name) {
-	if (name != "") {
-		file.open(name);
-		if (!file.is_open()) {
-			*stream << "Bad file \"" + name + "\"\n";
-		}
-		else {
-			return true;
-		}
-	}
-
-	return false;
-}
+bool try_file(const T& stream, F& file, const std::string& name);
 
 int main(int argc, char *argv[]) {
 	auto cmd = CommandParser(argc, argv);
@@ -69,4 +57,19 @@ int main(int argc, char *argv[]) {
 	}
 	
 	return 0;
+}
+
+template<typename T, typename F>
+bool try_file(const T& stream, F& file, const std::string& name) {
+	if (name != "") {
+		file.open(name);
+		if (!file.is_open()) {
+			*stream << "Bad file \"" + name + "\"\n";
+		}
+		else {
+			return true;
+		}
+	}
+
+	return false;
 }
