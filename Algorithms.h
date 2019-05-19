@@ -11,7 +11,7 @@ class Solution {
 	static bool is_linear(const V<V<u_i>>& _coefficients) {
 		for (const auto& l_it : _coefficients) {
 			for (const auto& it : l_it) {
-				if ((it & (it - 1)) != 0)
+				if (it & (it - 1))
 					return false;
 			}
 		}
@@ -90,7 +90,7 @@ class Quine : public Method {
 				return coef & (~number);
 			}
 			else {
-				return ((coef & number) == 0) ? coef : -1;
+				return (coef & number) ? -1 : coef;
 			}
 		}
 
@@ -244,7 +244,7 @@ class TSS : public Method {
 	bool multiply(const V<u_i>& equation, const u_i value) {
 		bool ans = false;
 		for (const auto& it : equation) {
-			if ((value & it) > 0) {
+			if (value & it) {
 				ans = !ans;
 			}
 		}
@@ -255,7 +255,7 @@ class TSS : public Method {
 	u_i calcul_sum(const V<u_i>& coefs, const u_i vec) {
 		u_i ans = 0;
 		for (u_i i = 0; i < coefs.size(); ++i) {
-			if (((1 << i) & vec) > 0) {
+			if ((1 << i) & vec) {
 				ans ^= coefs[i];
 			}
 		}
@@ -298,7 +298,7 @@ public:
 		V<u_i> indiv, basis;
 
 		for (const auto it : vec) {
-			if ((it & null_value) > 0) {
+			if (it & null_value) {
 				indiv.push_back(it & (~null_value));
 			}
 			else {
