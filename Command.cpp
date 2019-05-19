@@ -23,10 +23,9 @@ Options::Options() :
 	help(false),
 	logs(false),
 	timer(false),
-	input_file(&std::cin),
-	output_file(&std::cout)
+	input_file(""),
+	output_file("")
 {}
-
 Options CMDHelper::work_with_cmd(const CommandParser& cmd) {
 	Options opt;
 	// help
@@ -40,24 +39,12 @@ Options CMDHelper::work_with_cmd(const CommandParser& cmd) {
 	// input file
 	command = "-f";
 	if (cmd.is_exists(command)) {
-		std::ifstream file(cmd.get_value(command));
-		if (file.is_open()) {
-			opt.input_file = &file;
-		}
-		else {
-			*opt.output_file << "Can not open input file!\n";
-		}
+		opt.input_file = cmd.get_value(command);
 	}
 	// output file
 	command = "o";
 	if (cmd.is_exists(command)) {
-		std::ofstream file(cmd.get_value(command));
-		if (file.is_open()) {
-			opt.output_file = &file;
-		}
-		else {
-			*opt.output_file << "Can not open output file!\n";
-		}
+		opt.output_file = cmd.get_value(command);
 	}
 
 	return opt;

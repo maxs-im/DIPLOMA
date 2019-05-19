@@ -2,9 +2,6 @@
 #include <vector>
 #include <string>
 
-#include <fstream>
-#include <iostream>
-
 class CommandParser {
 	std::vector<std::string> tokens;
 public:
@@ -16,8 +13,8 @@ public:
 
 struct Options {
 	bool help, logs, timer;
-	std::istream* input_file;
-	std::ostream* output_file;
+	std::string input_file;
+	std::string output_file;
 
 	Options();
 };

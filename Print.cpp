@@ -5,13 +5,17 @@ namespace Printer {
 		const System_Equations& sys,
 		std::ostream& out
 	) {
-		out << "\nVARIABLES\n";
-		for (const auto& it : sys.vocabulary) {
-			out << it << " ";
+		if (sys.vocabulary.size()) {
+			out << "\nVARIABLES\n";
+			for (const auto& it : sys.vocabulary) {
+				out << it << " ";
+			}
 		}
-		out << "\nERRORS\n";
-		for (const auto& it : sys.errors) {
-			out << it.get_error() << "\n";
+		if (sys.errors.size()) {
+			out << "\nERRORS\n";
+			for (const auto& it : sys.errors) {
+				out << it.get_error() << "\n";
+			}
 		}
 	}
 
@@ -20,16 +24,18 @@ namespace Printer {
 		const std::set<std::string> vocabulary,
 		std::ostream& out
 	) {
-		out << "\n\n\t\tANSWERS\n";
-		const auto& individual(answers.first),
-			basis(answers.second);
+		if (vocabulary.size()) {
+			out << "\n\n\t\tANSWERS\n";
+			const auto& individual(answers.first),
+				basis(answers.second);
 
-		if (!individual.size() && !basis.size()) {
-			out << "NO SOLUTIONS";
-		}
-		else {
-			print_block(vocabulary, individual, "INDIVIDUAL", out);
-			print_block(vocabulary, basis, "BASIS", out);
+			if (!individual.size() && !basis.size()) {
+				out << "NO SOLUTIONS\n";
+			}
+			else {
+				print_block(vocabulary, individual, "INDIVIDUAL", out);
+				print_block(vocabulary, basis, "BASIS", out);
+			}
 		}
 	}
 
@@ -70,7 +76,7 @@ namespace Printer {
 		const bool is_full,
 		std::ostream& out
 	) {
-		out << "\tTIMER INFO\n";
+		out << "\n\tTIMER INFO\n";
 		if (is_full) {
 			out << "Time for parsing input (without reading): " << creation_time << " seconds\n";
 		}
