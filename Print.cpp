@@ -103,6 +103,6 @@ namespace Printer {
 		if (is_full) {
 			out << "Time for parsing input (without reading): " << creation_time << " seconds\n";
 		}
-		out << "Time for resolving system: " << creation_time << " seconds\n";
+		out << "Time for resolving system: " << resolving_time << " seconds\n";
 	}
 }
