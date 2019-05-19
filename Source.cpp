@@ -52,7 +52,8 @@ int main(int argc, char *argv[]) {
 		Printer::print_answers(answers, sys.vocabulary, *out);
 	}
 	catch (std::string e) {
-		*out << "Program catches exception: \"" + e + "\". Contact to developers\n";
+		*out << "Program catches exception: \"" + e + "\". Contact to developers\n\n";
+		Printer::print_help(*out);
 		return 1;
 	}
 	

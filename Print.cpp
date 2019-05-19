@@ -64,11 +64,31 @@ namespace Printer {
 		}
 	}
 
-	// TODO: add small documentation
-	void print_help(std::ostream & out) {
+	void print_help(std::ostream& out) {
 		const char* text =
 			"\tHow to use this program?\n"
-			""
+			"Program is used to solve systems of (non-)linear (in-)homogeneous equations\n"
+			"For linear we'll use TSS method. Otherwise, Quine's method\n"
+			"\n\n\tFor more info your could use such flags:\n"
+			"\t\t\"-h\" - to see this info\n"
+			"\t\t\"-t\" - to detect the execution time of the main functions\n"
+			"\t\t\"-l\" - something like logs (errors, parsed variables etc.)\n"
+			"\t\t\"-f/-o\" - input/output file directories accordingly\n\n"
+			"\tHow to write correct input?\n"
+			"You should to know some rules:\n"
+			"\t1. Each line == equation. But empty line -> means stop for parsing\n"
+			"\t2. There are two ways to write an equation:\n"
+			"\t\ta. In common boolean form\n"
+			"Example: \'x1 x2 x3 10110010\'.\n"
+			"Read from left to right -> first \'1\' -> means x = (x1 x2 x3) = (0, 0, 0), f(x) = 1\n"
+			"Note: n - variables means we should have table with 2^n elements in !one string (only \'1\', \'0\' symbols)\n"
+			"Also, do not repeat variables like \'x1 x1 0100\'\n"
+			"\t\tb. In Zhegalkin form\n"
+			"Example: \'x1 x2 + x3 = 1\'\n"
+			"\'+\' - means adding modulo two, \' \' between variables - means conjunction\n"
+			"Write each symbol with space!. You have two special symbols \'+\' and \'=\'.\n"
+			"Note: Symbol \'=\' must be at the end. After it you can set either \'1\' or \'0\' (by default on nothing)\n"
+			"\n\n\t\t\tAuthored: 20.05.2019 by Maxim Galchenko (@maxs-im)\n"
 			;
 		out << text;
 	}
