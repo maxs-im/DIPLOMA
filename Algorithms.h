@@ -2,6 +2,7 @@
 #include <vector>
 #include <unordered_set> 
 #include <utility>
+#include <algorithm>
 
 template<typename T> using V = std::vector<T>;
 using u_i = unsigned int;
@@ -213,27 +214,33 @@ class TSS : public Method {
 				coefs.erase(coefs.begin() + i);
 				--i;
 			}
+
+			// replace value = 1 (b_i) with one more variable
+			for (auto& it : equation) {
+				if (it == 0) {
+					it = get_null_value();
+				}
+			}
 		}
 
 		return coefs;
 	}
 
-	V<u_i> get_start_vectors(const V<u_i>& first) {
+	V<u_i> get_start_vectors(const V<u_i>& first, u_i range) {
 		V<u_i> vectors;
-		vectors.reserve(first.size() - 1);
+		vectors.reserve(range - 1);
 
-		for (u_i i = 0; i < first.size(); ++i) {
-			if (first[i] > 0) {
-				u_i pillar = first[i];
-				for (u_i j = 0; j < first.size(); ++j) {
-					if (i == j) {
-						continue;
-					}
-
-					auto eq_pillar = (first[j] == 0) ? get_null_value() : first[j];
-					vectors.push_back(pillar + first[j]);
-				}
+		u_i pillar = first.front();
+		for (u_i j = 1; j < range; ++j) {
+			auto eq_pillar = 1 << j;
+			u_i lor;
+			if (std::find(first.begin(), first.end(), eq_pillar) != first.end()) {
+				lor = pillar + eq_pillar;
 			}
+			else {
+				lor = eq_pillar;
+			}
+			vectors.push_back(lor);
 		}
 
 		return vectors;
@@ -242,8 +249,7 @@ class TSS : public Method {
 	bool multiply(const V<u_i>& equation, const u_i value) {
 		bool ans = false;
 		for (const auto& it : equation) {
-			auto curr = (it != 0) ? it : get_null_value();
-			if ((value & curr) > 0) {
+			if ((value & it) > 0) {
 				ans = !ans;
 			}
 		}
@@ -253,9 +259,9 @@ class TSS : public Method {
 
 	u_i calcul_sum(const V<u_i>& coefs, const u_i vec) {
 		u_i ans = 0;
-		for (const auto it : coefs) {
-			if ((it & vec) > 0) {
-				ans ^= it;
+		for (u_i i = 0; i < coefs.size(); ++i) {
+			if (((1 << i) & vec) > 0) {
+				ans ^= coefs[i];
 			}
 		}
 		return ans;
@@ -275,11 +281,11 @@ class TSS : public Method {
 			return equation;
 		}
 
-		V<u_i>	tmp_vec(get_start_vectors(tmp_coef)),
+		V<u_i>	tmp_vec(get_start_vectors(tmp_coef, vectors.size())),
 				ans;
 		ans.reserve(tmp_vec.size());
 		for (const auto& it : tmp_vec) {
-			ans.push_back(calcul_sum(tmp_coef, it));
+			ans.push_back(calcul_sum(vectors, it));
 		}
 
 		return ans;
@@ -296,7 +302,7 @@ public:
 		V<u_i> indiv, basis;
 		for (const auto it : vec) {
 			if ((it & get_null_value()) > 0) {
-				indiv.push_back(it);
+				indiv.push_back(it & (~get_null_value()));
 			}
 			else {
 				basis.push_back(it);
@@ -311,7 +317,7 @@ public:
 			return { 0 };
 		}
 
-		auto set_vec = get_start_vectors(upd_coefs.front());
+		auto set_vec = get_start_vectors(upd_coefs.front(), data_ptr->range + 1);
 		for (u_i i = 1; i < upd_coefs.size(); ++i) {
 			set_vec = add_equation(upd_coefs[i], set_vec);
 		}
