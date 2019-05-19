@@ -30,12 +30,15 @@ namespace Printer {
 				basis(answers.second);
 
 			if (!individual.size() && !basis.size()) {
-				out << "NO SOLUTIONS\n";
+				out << "NO SOLUTIONS. Maybe infinity amount\n";
 			}
 			else {
 				print_block(vocabulary, individual, "INDIVIDUAL", out);
 				print_block(vocabulary, basis, "BASIS", out);
 			}
+		}
+		else {
+			out << "\nChange condition! There is no any parsed variables\n";
 		}
 	}
 
