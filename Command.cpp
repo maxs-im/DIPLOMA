@@ -40,12 +40,24 @@ Options CMDHelper::work_with_cmd(const CommandParser& cmd) {
 	// input file
 	command = "-f";
 	if (cmd.is_exists(command)) {
-		opt.input_file = &std::ifstream(cmd.get_value(command));
+		std::ifstream file(cmd.get_value(command));
+		if (file.is_open()) {
+			opt.input_file = &file;
+		}
+		else {
+			*opt.output_file << "Can not open input file!\n";
+		}
 	}
 	// output file
 	command = "o";
 	if (cmd.is_exists(command)) {
-		opt.output_file = &std::ofstream(cmd.get_value(command));
+		std::ofstream file(cmd.get_value(command));
+		if (file.is_open()) {
+			opt.output_file = &file;
+		}
+		else {
+			*opt.output_file << "Can not open output file!\n";
+		}
 	}
 
 	return opt;
