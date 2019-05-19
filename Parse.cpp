@@ -1,7 +1,5 @@
 #include "Parse.h";
-
-template<typename T> using V = std::vector<T>;
-using S = std::string;
+#include "templates.h"
 
 Parsing::Error::Error(const ErrorsId _id, bool _is_Table, const S& _info = "") 
 		: info(_info), id(_id), is_Table(_is_Table) {

@@ -1,7 +1,5 @@
 #include "Algorithms.h"
-
-template<typename T> using V = std::vector<T>;
-using u_i = unsigned int;
+#include "templates.h"
 
 std::pair<V<u_i>, V<u_i>> Solution::solve() {
 	std::pair<V<u_i>, V<u_i>> vectors;

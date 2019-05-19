@@ -1,8 +1,5 @@
 #include "Zhegalkin.h"
-
-using u_i = unsigned int;
-template<typename T> using V = std::vector<T>;
-using S = std::string;
+#include "templates.h"
 
 u_i System_Equations::num_queue(const S& var) const {
 	auto itr = vocabulary.begin();

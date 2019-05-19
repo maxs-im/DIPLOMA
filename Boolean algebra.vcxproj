@@ -138,6 +138,7 @@
     <ClInclude Include="Command.h" />
     <ClInclude Include="Read.h" />
     <ClInclude Include="Parse.h" />
+    <ClInclude Include="templates.h" />
     <ClInclude Include="Zhegalkin.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

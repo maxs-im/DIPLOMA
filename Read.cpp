@@ -1,7 +1,6 @@
 #include "Read.h"
+#include "templates.h"
 
-template<typename T> using V = std::vector<T>;
-using S = std::string;
 using VS = V<S>;
 using VVS = V<V<S>>;
 
