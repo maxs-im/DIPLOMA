@@ -6,6 +6,10 @@
 class System_Equations : public Parsing {
 protected:
 	unsigned int num_queue(const std::string& var) const;
+	std::vector<unsigned int> convert_to_real(
+		std::vector<unsigned int> bits,
+		const std::vector<std::string>& vars
+	);
 	
 	unsigned int get_coef_from_combination(const std::vector<unsigned int>& vars);
 

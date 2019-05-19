@@ -1,101 +1,76 @@
 #include "Read.h"
 #include "Zhegalkin.h"
 #include "Command.h"
-#include <fstream>
+#include "Print.h"
+#include "Timer.h"
 #include <iostream>
+#include <fstream>
 
-void work_with_cmd(const CommandParser& cmd);
-
-void print_answers(
-	const std::set<std::string>& vocabulary,
-	const std::vector<unsigned int>& answers,
-	const std::string& title
-);
+template<typename T, typename F>
+bool try_file(const T& stream, F& file, const std::string& name);
 
 int main(int argc, char *argv[]) {
 	auto cmd = CommandParser(argc, argv);
-	work_with_cmd(cmd);
+	Options opt(CMDHelper::work_with_cmd(cmd));
 	
-	std::ifstream file("test.txt");
-	auto x = Read::read_file(file);
-	auto sys = System_Equations(x);
-	/*
-	for (const auto& it : sys.coefficients) {
-		for (auto ii : it) {
-			std::cout << ii << " ";
+	std::ofstream file_out;
+	std::ifstream file_in;
+
+	std::ostream* out = &std::cout;
+	std::istream* in = &std::cin;
+
+	if (try_file(out, file_out, opt.output_file)) {
+		out = &file_out;
+	}
+	if (try_file(out, file_in, opt.input_file)) {
+		in = &file_in;
+	}
+
+	if (opt.help) {
+		Printer::print_help(*out);
+		return 0;
+	}
+
+	try {
+		auto x = Read::read_file(*in);
+		Timer time;
+		auto sys = System_Equations(x);
+		auto creation_time = time.elapsed();
+
+		time.reset();
+		auto answers = sys.resolve();
+		auto resolving_time = time.elapsed();
+
+		if (opt.logs) {
+			Printer::print_logs(sys, *out);
 		}
-		std::cout << "\n";
-	}
-	std::cout << "\nVARIABLES\n";
-	for (const auto& it : sys.vocabulary) {
-		std::cout << it << " ";
-	}
-	std::cout << "\nERRORS\n";
-	for (const auto& it : sys.errors) {
-		std::cout << it.get_error() << "\n";
-	}
-	*/
-	std::cout << "\n\n\t\tANSWERS\n";
 
-	auto answers = sys.resolve();
-	const auto&	individual(answers.first),
-				basis(answers.second);
+		if (opt.timer) {
+			Printer::print_time(creation_time, resolving_time, opt.logs, *out);
+		}
 
-	if (!individual.size() && !basis.size()) {
-		std::cout << "NO SOLUTIONS";
+		Printer::print_answers(answers, sys.vocabulary, *out);
 	}
-	else {
-		print_answers(sys.vocabulary, individual, "INDIVIDUAL");
-		print_answers(sys.vocabulary, basis, "BASIS");
+	catch (std::string e) {
+		*out << "Program catches exception: \"" + e + "\". Contact to developers\n\n";
+		Printer::print_help(*out);
+		return 1;
 	}
 	
 	return 0;
 }
 
-void print_answers(
-	const std::set<std::string>& vocabulary,
-	const std::vector<unsigned int>& answers,
-	const std::string& title
-) {
-	if (answers.size()) {
-		std::cout << "\n" + title + ":\n";
-		for (auto it = vocabulary.begin(); it != vocabulary.end(); ++it) {
-			std::cout << *it + " \t";
+template<typename T, typename F>
+bool try_file(const T& stream, F& file, const std::string& name) {
+	if (name != "") {
+		file.open(name);
+		if (!file.is_open()) {
+			*stream << "Bad file \"" + name + "\"\n";
 		}
-		std::cout << "\n";
-		for (const auto s_it : answers) {
-			int i = 0;
-			for (auto it = vocabulary.begin(); it != vocabulary.end(); ++it, ++i) {
-				std::cout << ((s_it & (1 << i)) ? 1 : 0) << " \t";
-			}
-			std::cout << "\n";
+		else {
+			return true;
 		}
 	}
-}
 
-void work_with_cmd(const CommandParser& cmd) {
-	// help
-	if (cmd.is_exists("-h")) {
-		std::cout << "HELP";
-	}
-
-	// errors logs
-	if (cmd.is_exists("-l")) {
-		std::cout << "\n	\n\tLogs\n";
-	}
-
-	// input file
-	if (cmd.is_exists("-f")) {
-		std::cout << "input file";
-	}
-
-	// output file
-	if (cmd.is_exists("-o")) {
-		std::cout << "output file\n";
-	}
-
-	// timer
-	if (cmd.is_exists("-t")) {
-		std::cout << "timer\n";
-	}
+	return false;
 }

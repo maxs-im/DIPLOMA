@@ -125,9 +125,11 @@
   <ItemGroup>
     <ClCompile Include="Algorithms.cpp" />
     <ClCompile Include="Command.cpp" />
+    <ClCompile Include="Print.cpp" />
     <ClCompile Include="Read.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Parse.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Zhegalkin.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -136,9 +138,11 @@
   <ItemGroup>
     <ClInclude Include="Algorithms.h" />
     <ClInclude Include="Command.h" />
+    <ClInclude Include="Print.h" />
     <ClInclude Include="Read.h" />
     <ClInclude Include="Parse.h" />
     <ClInclude Include="templates.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Zhegalkin.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
