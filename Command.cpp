@@ -42,7 +42,7 @@ Options CMDHelper::work_with_cmd(const CommandParser& cmd) {
 		opt.input_file = cmd.get_value(command);
 	}
 	// output file
-	command = "o";
+	command = "-o";
 	if (cmd.is_exists(command)) {
 		opt.output_file = cmd.get_value(command);
 	}
