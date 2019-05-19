@@ -17,7 +17,7 @@ public:
 		const unsigned int _range
 	);
 
-	std::vector<unsigned int> solve();
+	std::pair<std::vector<unsigned int>, std::vector<unsigned int>> solve();
 };
 
 // interface for our algorithms
@@ -29,8 +29,11 @@ protected:
 	void invalid_call() const throw(...);
 public:
 	Method(const Solution* _data);
+	
 	std::vector<unsigned int> answers;
-	virtual std::vector<unsigned int> solve();
+	std::vector<unsigned int> basis;
+
+	virtual std::pair<std::vector<unsigned int>, std::vector<unsigned int>> solve();
 
 };
 
@@ -76,7 +79,7 @@ public:
 	// Note: zero coefficient means Positive value for equation
 	Quine(const Solution* solution);
 
-	std::vector<unsigned int> solve();
+	std::pair<std::vector<unsigned int>, std::vector<unsigned int>> solve();
 };
 
 class TSS : public Method {
@@ -95,13 +98,13 @@ class TSS : public Method {
 		const std::vector<unsigned int>& vectors
 	);
 
-public:
-	TSS(const Solution* solution);
-
 	// first -> individual, second -> basis
 	std::pair<std::vector<unsigned int>, std::vector<unsigned int>> separate_solutions(
 		const std::vector<unsigned int>& vec
 	);
 
-	std::vector<unsigned int> solve();
+public:
+	TSS(const Solution* solution);
+
+	std::pair<std::vector<unsigned int>, std::vector<unsigned int>> solve();
 };

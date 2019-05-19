@@ -18,10 +18,7 @@ protected:
 public:
 	std::vector<std::vector<unsigned int>> coefficients;
 
-	std::vector<unsigned int> resolve() {
-		// TODO: finish with named variables
-		return algo->solve();
-	}
+	std::pair<std::vector<unsigned int>, std::vector<unsigned int>> resolve();
 
 	System_Equations(const std::vector<std::vector<std::string>>& lines);
 };

@@ -3,19 +3,18 @@
 template<typename T> using V = std::vector<T>;
 using u_i = unsigned int;
 
-V<u_i> Solution::solve() {
-	V<u_i> vectors;
+std::pair<V<u_i>, V<u_i>> Solution::solve() {
+	std::pair<V<u_i>, V<u_i>> vectors;
 
 	if (linear) {
 		auto obj = TSS(this);
 
 		vectors = obj.solve();
-		auto pr = obj.separate_solutions(vectors);
-		vectors = pr.first;
-		vectors.insert(vectors.end(), pr.second.begin(), pr.second.end());
 	}
 	else {
-		vectors = Quine(this).solve();
+		auto obj = Quine(this);
+
+		vectors = obj.solve();
 	}
 
 	return vectors;
@@ -69,9 +68,8 @@ Method::Method(const Solution * _data) : data_ptr(_data) {
 		throw "Inccorect pointer. Contact to developers!";
 };
 	
-// TODO: try to remove
-V<u_i> Method::solve() {
-	return answers;
+std::pair<V<u_i>, V<u_i>> Method::solve() {
+	return std::make_pair(answers, basis);
 }
 
 
@@ -183,10 +181,12 @@ Quine::Quine(const Solution * solution) : Method(solution) {
 		invalid_call();
 }
 
-V<u_i> Quine::solve() {
+std::pair<V<u_i>, V<u_i>> Quine::solve() {
 	answers.clear();
+	basis.clear();
+
 	step(data_ptr->coefficients);
-	return answers;
+	return std::make_pair(answers, basis);
 }
 
 V<V<u_i>> TSS::prepare_coefs(V<V<u_i>> coefs, const u_i range) throw(...) {
@@ -287,23 +287,24 @@ TSS::TSS(const Solution * solution) : Method(solution) {
 // first -> individual, second -> basis
 std::pair<V<u_i>, V<u_i>> TSS::separate_solutions(const V<u_i> & vec) {
 	u_i null_value = 1 << data_ptr->range;
-	V<u_i> indiv, basis;
+	answers.clear();
+	basis.clear();
 
 	for (const auto it : vec) {
 		if (it & null_value) {
-			indiv.push_back(it & (~null_value));
+			answers.push_back(it & (~null_value));
 		}
 		else {
 			basis.push_back(it);
 		}
 	}
-	return std::make_pair(indiv, basis);
+	return std::make_pair(answers, basis);
 }
 
-V<u_i> TSS::solve() {
+std::pair<V<u_i>, V<u_i>> TSS::solve() {
 	auto upd_coefs = prepare_coefs(data_ptr->coefficients, data_ptr->range);
 	if (upd_coefs.size() == 0) {
-		return { 0 };
+		return { { 0 } , {} };
 	}
 
 	auto set_vec = get_start_vectors(upd_coefs.front(), data_ptr->range + 1);
@@ -311,5 +312,5 @@ V<u_i> TSS::solve() {
 		set_vec = add_equation(upd_coefs[i], set_vec);
 	}
 
-	return set_vec;
+	return separate_solutions(set_vec);
 }

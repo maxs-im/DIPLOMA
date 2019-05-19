@@ -104,3 +104,7 @@ System_Equations::System_Equations(const V<V<S>>& lines)
 
 	algo = std::make_unique<Solution>(coefficients, vocabulary.size());
 }
+
+std::pair<V<u_i>, V<u_i>> System_Equations::resolve() {
+	return algo->solve();
+}
