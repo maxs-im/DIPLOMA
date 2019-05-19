@@ -197,12 +197,7 @@ public:
 };
 
 class TSS : public Method {
-	// TODO: inline??!!
-	u_i get_null_value() {
-		return 1 << data_ptr->range;
-	}
-
-	V<V<u_i>> prepare_coefs(V<V<u_i>> coefs) throw(...) {
+	V<V<u_i>> prepare_coefs(V<V<u_i>> coefs, const u_i range) throw(...) {
 		for (int i = 0; i < coefs.size(); ++i) {
 			auto& equation = coefs[i];
 			reduce(equation);
@@ -218,7 +213,7 @@ class TSS : public Method {
 			// replace value = 1 (b_i) with one more variable
 			for (auto& it : equation) {
 				if (it == 0) {
-					it = get_null_value();
+					it = 1 << range;
 				}
 			}
 		}
@@ -299,10 +294,12 @@ public:
 
 	// first -> individual, second -> basis
 	std::pair<V<u_i>, V<u_i>> separate_solutions(const V<u_i>& vec) {
+		u_i null_value = 1 << data_ptr->range;
 		V<u_i> indiv, basis;
+
 		for (const auto it : vec) {
-			if ((it & get_null_value()) > 0) {
-				indiv.push_back(it & (~get_null_value()));
+			if ((it & null_value) > 0) {
+				indiv.push_back(it & (~null_value));
 			}
 			else {
 				basis.push_back(it);
@@ -312,7 +309,7 @@ public:
 	}
 
 	V<u_i> solve() {
-		auto upd_coefs = prepare_coefs(data_ptr->coefficients);
+		auto upd_coefs = prepare_coefs(data_ptr->coefficients, data_ptr->range);
 		if (upd_coefs.size() == 0) {
 			return { 0 };
 		}
