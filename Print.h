@@ -22,4 +22,11 @@ namespace Printer {
 		const std::string& title,
 		std::ostream& out
 	);
+
+	void print_time(
+		const double creation_time,
+		const double resolving_time,
+		const bool is_full,
+		std::ostream& out
+	);
 }

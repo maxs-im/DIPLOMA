@@ -63,4 +63,17 @@ namespace Printer {
 			;
 		out << text;
 	}
+
+	void print_time(
+		const double creation_time,
+		const double resolving_time,
+		const bool is_full,
+		std::ostream& out
+	) {
+		out << "\tTIMER INFO\n";
+		if (is_full) {
+			out << "Time for parsing input (without reading): " << creation_time << " seconds\n";
+		}
+		out << "Time for resolving system: " << creation_time << " seconds\n";
+	}
 }
