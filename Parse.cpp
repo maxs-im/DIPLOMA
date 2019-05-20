@@ -31,8 +31,8 @@ S Parsing::Error::id2str(const ErrorsId id) {
 }
 S Parsing::Error::get_error() const {
 	auto	message = id2str(id),
-			type = S(is_Table ? "Table" : "Full"),
-			prefix = type + " " + std::to_string(index) + ": ";
+			type = S(is_Table ? "Table" : "Zhegalkin"),
+			prefix = type + "-> line " + std::to_string(index + 1) + ": ";
 	return prefix + message + (info == "" ? "" : " (" + info + ")");
 }
 
