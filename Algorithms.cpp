@@ -36,7 +36,7 @@ Solution::Solution(const V<V<u_i>> & _coefficients, const u_i _range) :
 {
 	for (const auto& l_it : coefficients)
 		for (const auto& it : l_it)
-			if (it > ((unsigned int) 1 << range))
+			if (it > ((unsigned long long) 1 << range))
 				throw "Range is incorrect for Solution";
 }
 

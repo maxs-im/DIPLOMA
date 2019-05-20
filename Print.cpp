@@ -20,7 +20,7 @@ namespace Printer {
 	}
 
 	void print_answers(
-		const std::pair<std::vector<unsigned int>, std::vector<unsigned int>>& answers,
+		const std::pair<std::vector<unsigned long long>, std::vector<unsigned long long>>& answers,
 		const std::set<std::string> vocabulary,
 		std::ostream& out
 	) {
@@ -44,7 +44,7 @@ namespace Printer {
 
 	void print_block(
 		const std::set<std::string>& vocabulary,
-		const std::vector<unsigned int>& answers,
+		const std::vector<unsigned long long>& answers,
 		const std::string& title,
 		std::ostream& out
 	) {
@@ -117,7 +117,7 @@ namespace Printer {
 		out << "\t" << title << "\n";
 
 		const std::vector<std::string> variables(sys.vocabulary.begin(), sys.vocabulary.end());
-		const auto get_polynom = [&variables](const unsigned int num) -> std::string {
+		const auto get_polynom = [&variables](const unsigned long long num) -> std::string {
 			std::string polyn;
 			for (const auto index : System_Equations::get_set_bits(num)) {
 				polyn += variables[index] + " ";

@@ -5,26 +5,26 @@
 
 class System_Equations : public Parsing {
 protected:
-	unsigned int num_queue(const std::string& var) const;
-	std::vector<unsigned int> convert_to_real(
-		std::vector<unsigned int> bits,
+	unsigned long long num_queue(const std::string& var) const;
+	std::vector<unsigned long long> convert_to_real(
+		std::vector<unsigned long long> bits,
 		const std::vector<std::string>& vars
 	);
 	
-	unsigned int get_coef_from_combination(const std::vector<unsigned int>& vars);
+	unsigned long long get_coef_from_combination(const std::vector<unsigned long long>& vars);
 
-	std::vector<unsigned int> convert_table(const std::vector<std::string>& line);
-	std::vector<unsigned int> convert_polynom(const std::vector<std::string>& line);
+	std::vector<unsigned long long> convert_table(const std::vector<std::string>& line);
+	std::vector<unsigned long long> convert_polynom(const std::vector<std::string>& line);
 
 	std::unique_ptr<Solution> algo;
 public:
-	std::vector<std::vector<unsigned int>> coefficients;
+	std::vector<std::vector<unsigned long long>> coefficients;
 
-	std::pair<std::vector<unsigned int>, std::vector<unsigned int>> resolve();
+	std::pair<std::vector<unsigned long long>, std::vector<unsigned long long>> resolve();
 
 	System_Equations(const std::vector<std::vector<std::string>>& lines);
 
-	static std::vector<unsigned int> get_set_bits(unsigned int n);
+	static std::vector<unsigned long long> get_set_bits(unsigned long long n);
 };
 
 
