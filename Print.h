@@ -29,4 +29,9 @@ namespace Printer {
 		const bool is_full,
 		std::ostream& out
 	);
+
+	void print_system(
+		const System_Equations& sys,
+		std::ostream& out
+	);
 }

@@ -49,6 +49,7 @@ int main(int argc, char *argv[]) {
 			Printer::print_time(creation_time, resolving_time, opt.logs, *out);
 		}
 
+		Printer::print_system(sys, *out);
 		Printer::print_answers(answers, sys.vocabulary, *out);
 	}
 	catch (std::string e) {

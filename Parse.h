@@ -7,6 +7,9 @@
 
 class Parsing {
 protected:
+	bool is_from_table(const std::vector<std::string>& line) const;
+
+public:
 	const enum Actions {
 		EQUAL = '=',
 		ADD = '+',
@@ -14,9 +17,6 @@ protected:
 		POSITIVE = '1'
 	};
 
-	bool is_from_table(const std::vector<std::string>& line) const;
-
-public:
 	struct Error {
 		const enum ErrorsId {
 			BIT = -1,

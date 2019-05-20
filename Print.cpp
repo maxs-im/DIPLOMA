@@ -105,4 +105,54 @@ namespace Printer {
 		}
 		out << "Time for resolving system: " << resolving_time << " seconds\n";
 	}
+
+	void print_system(
+		const System_Equations& sys,
+		std::ostream& out
+	) {
+		if (sys.coefficients.size() == 0) {
+			return;
+		}
+		const std::string title = "System of equations";
+		out << "\t" << title << "\n";
+
+		const std::vector<std::string> variables(sys.vocabulary.begin(), sys.vocabulary.end());
+		const auto get_polynom = [&variables](const unsigned int num) -> std::string {
+			std::string polyn;
+			for (const auto index : System_Equations::get_set_bits(num)) {
+				polyn += variables[index] + " ";
+			}
+
+			return polyn;
+		};
+		const int eq_num = sys.coefficients.size();
+		const auto get_sep = [eq_num](int i) -> char {
+			if (i == (eq_num - 1)) return i ? '\\' : ' ';
+			else if (i == 0) return '/';
+			else return '|';
+		};
+	
+		for (int i = 0; i < eq_num; ++i) {
+			bool has_zero(false);
+			std::string equation;
+			for (const auto& it : sys.coefficients[i]) {
+				if (it == 0) {
+					has_zero = true;
+					continue;
+				}
+				
+				equation += std::string(1, Parsing::Actions::ADD) + " " + get_polynom(it);
+			}
+			equation += std::string(1, Parsing::Actions::EQUAL) + " " + 
+				(has_zero ? std::string(1, Parsing::Actions::POSITIVE) : std::string(1, Parsing::Actions::NEGATIVE));
+
+			// erase first less symbols (+ )
+			equation.erase(equation.begin(), equation.begin() + 2);
+			
+			
+			out << get_sep(i) << equation << "\n";
+		}
+
+		out << "\t" << std::string(title.length(), '-') << "\n";
+	}
 }
