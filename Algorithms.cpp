@@ -36,7 +36,7 @@ Solution::Solution(const V<V<u_i>> & _coefficients, const u_i _range) :
 {
 	for (const auto& l_it : coefficients)
 		for (const auto& it : l_it)
-			if (it > ((unsigned long long) 1 << range))
+			if (it > ((u_i) 1 << range))
 				throw "Range is incorrect for Solution";
 }
 
@@ -76,13 +76,18 @@ Quine::Value::Value(u_i _index, bool _positive) :
 	positive(_positive)
 {}
 
-int Quine::Value::count(const u_i coef) const {
+u_i Quine::Value::count(const u_i coef) const throw (...) {
 	u_i number = get_number();
 	if (positive) {
 		return coef & (~number);
 	}
 	else {
-		return (coef & number) ? -1 : coef;
+		if (coef & number) {
+			throw "";
+		}
+		else {
+			return coef;
+		}
 	}
 }
 
@@ -93,22 +98,21 @@ u_i operator+ (const Quine::Value& val, const u_i vec) {
 }
 
 u_i Quine::Value::get_number() const {
-	return 1 << index;
+	return (u_i) 1 << index;
 }
 
 bool Quine::update_coefs(V<V<u_i>>& coefs, const Value& val) {
-	for (int li = 0; li < coefs.size(); ++li) {
+	for (u_i li = 0; li < coefs.size();) {
 		V<u_i>& equation = coefs[li];
 
-		for (int i = 0; i < equation.size(); ++i) {
-			int new_val = val.count(equation[i]);
-			if (new_val == -1) {
+		for (u_i i = 0; i < equation.size(); ++i) {
+			try {
+				auto new_val = val.count(equation[i]);
+				equation[i] = new_val;
+			} catch (...) {
 				// polynom = zero
 				equation.erase(equation.begin() + i);
 				if (i > 0) i--;
-			}
-			else {
-				equation[i] = new_val;
 			}
 		}
 		reduce(equation);
@@ -120,8 +124,10 @@ bool Quine::update_coefs(V<V<u_i>>& coefs, const Value& val) {
 		}
 		if (equation.size() == 0) {
 			coefs.erase(coefs.begin() + li);
-			li--;
+			continue;
 		}
+
+		++li;
 	}
 
 	return true;
@@ -134,7 +140,7 @@ void Quine::set_value(V<V<u_i>> coefs, const u_i vec, const Value & val) {
 }
 
 // find first unknown variable in current @coefs
-u_i Quine::get_nearest_var(const V<V<u_i>> & coefs) {
+u_i Quine::get_nearest_var(const V<V<u_i>> & coefs) throw (...) {
 	for (const auto& l_it : coefs) {
 		for (const auto& it : l_it) {
 			if (it > 0) {
@@ -151,7 +157,7 @@ u_i Quine::get_nearest_var(const V<V<u_i>> & coefs) {
 		}
 	}
 
-	return -1;
+	throw "";
 }
 
 // like dfs
@@ -162,15 +168,17 @@ void Quine::step(const V<V<u_i>> & coefs, u_i vec) {
 		return;
 	}
 
-	int index = get_nearest_var(coefs);
-	if (index == -1) {
+	try {
+		auto index = get_nearest_var(coefs);
+		// Positive
+		set_value(coefs, vec, Value(index, true));
+		// Negative
+		set_value(coefs, vec, Value(index, false));
+	}
+	catch (...) {
 		// UNREACHABLE
 		return;
 	}
-	// Positive
-	set_value(coefs, vec, Value(index, true));
-	// Negative
-	set_value(coefs, vec, Value(index, false));
 }
 
 // Note: zero coefficient means Positive value for equation
@@ -188,7 +196,7 @@ std::pair<V<u_i>, V<u_i>> Quine::solve() {
 }
 
 V<V<u_i>> TSS::prepare_coefs(V<V<u_i>> coefs, const u_i range) throw(...) {
-	for (int i = 0; i < coefs.size(); ++i) {
+	for (u_i i = 0; i < coefs.size();) {
 		auto& equation = coefs[i];
 		reduce(equation);
 		if ((equation.size() == 1) && equation[0] == 0) {
@@ -197,15 +205,17 @@ V<V<u_i>> TSS::prepare_coefs(V<V<u_i>> coefs, const u_i range) throw(...) {
 		}
 		if (equation.size() == 0) {
 			coefs.erase(coefs.begin() + i);
-			--i;
+			continue;
 		}
 
 		// replace value = 1 (b_i) with one more variable
 		for (auto& it : equation) {
 			if (it == 0) {
-				it = 1 << range;
+				it = (u_i) 1 << range;
 			}
 		}
+
+		++i;
 	}
 
 	return coefs;
@@ -217,7 +227,7 @@ V<u_i> TSS::get_start_vectors(const V<u_i> & first, u_i range) {
 
 	u_i pillar = first.front();
 	for (u_i j = 0; j < range; ++j) {
-		auto eq_pillar = 1 << j;
+		auto eq_pillar = (u_i) 1 << j;
 		if (pillar == eq_pillar) {
 			continue;
 		}
@@ -248,7 +258,7 @@ bool TSS::multiply(const V<u_i> & equation, const u_i value) {
 u_i TSS::calcul_sum(const V<u_i> & coefs, const u_i vec) {
 	u_i ans = 0;
 	for (u_i i = 0; i < coefs.size(); ++i) {
-		if ((1 << i) & vec) {
+		if (((u_i) 1 << i) & vec) {
 			ans ^= coefs[i];
 		}
 	}
@@ -261,7 +271,7 @@ V<u_i> TSS::add_equation(const V<u_i> & equation, const V<u_i> & vectors) {
 
 	for (u_i i = 0; i < vectors.size(); ++i) {
 		if (multiply(equation, vectors[i])) {
-			tmp_coef.push_back(1 << i);
+			tmp_coef.push_back((u_i) 1 << i);
 		}
 	}
 	if (tmp_coef.size() == 0) {
@@ -287,7 +297,7 @@ TSS::TSS(const Solution * solution) : Method(solution) {
 
 // first -> individual, second -> basis
 std::pair<V<u_i>, V<u_i>> TSS::separate_solutions(const V<u_i> & vec) {
-	u_i null_value = 1 << data_ptr->range;
+	u_i null_value = (u_i) 1 << data_ptr->range;
 	answers.clear();
 	basis.clear();
 

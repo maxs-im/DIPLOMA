@@ -44,7 +44,7 @@ class Quine : public Method {
 
 		Value(unsigned long long _index, bool _positive = true);
 
-		int count(const unsigned long long coef) const;
+		unsigned long long count(const unsigned long long coef) const throw (...);
 
 		friend unsigned long long operator+ (const Value& val, const unsigned long long vec);
 
@@ -67,7 +67,7 @@ class Quine : public Method {
 	// find first unknown variable in current @coefs
 	unsigned long long get_nearest_var(
 		const std::vector<std::vector<unsigned long long>>& coefs
-	);
+	) throw (...);
 
 	// like dfs
 	void step(

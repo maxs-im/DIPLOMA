@@ -3,9 +3,9 @@
 
 Parsing::Error::Error(const ErrorsId _id, bool _is_Table, const S& _info = "") 
 		: info(_info), id(_id), is_Table(_is_Table) {
-	index = -1;
+	index = 0;
 };
-void Parsing::Error::set_index(int _index) {
+void Parsing::Error::set_index(u_i _index) {
 	index = _index;
 }
 
@@ -65,7 +65,7 @@ Parsing::Error Parsing::parse_table(const V<S>& tokens) {
 
 	// case with all null x y 0000  <=>  0 = 0
 	bool ignore = true;
-	for (int i = 0; i < table.length(); ++i) {
+	for (u_i i = 0; i < table.length(); ++i) {
 		// "x y 1?00"
 		switch (table[i])
 		{
@@ -169,7 +169,7 @@ Parsing::Error Parsing::parse_line(const V<S> & line) {
 }
 
 Parsing::Parsing(const V<V<S>>& lines) {
-	for (size_t i = 0; i < lines.size(); ++i) {
+	for (u_i i = 0; i < lines.size(); ++i) {
 		const V<S>& line = lines[i];
 
 		if (std::find(line.begin(), line.end(), "") != line.end()) {

@@ -55,9 +55,9 @@ namespace Printer {
 			}
 			out << "\n";
 			for (const auto s_it : answers) {
-				int i = 0;
+				unsigned long long i = 0;
 				for (auto it = vocabulary.begin(); it != vocabulary.end(); ++it, ++i) {
-					out << ((s_it & (1 << i)) ? 1 : 0) << " \t";
+					out << ((s_it & ((unsigned long long) 1 << i)) ? 1 : 0) << " \t";
 				}
 				out << "\n";
 			}
@@ -125,14 +125,14 @@ namespace Printer {
 
 			return polyn;
 		};
-		const int eq_num = sys.coefficients.size();
-		const auto get_sep = [eq_num](int i) -> char {
+		const unsigned long long eq_num = sys.coefficients.size();
+		const auto get_sep = [eq_num](const unsigned long long i) -> char {
 			if (i == (eq_num - 1)) return i ? '\\' : ' ';
 			else if (i == 0) return '/';
 			else return '|';
 		};
 	
-		for (int i = 0; i < eq_num; ++i) {
+		for (unsigned long long i = 0; i < eq_num; ++i) {
 			bool has_zero(false);
 			std::string equation;
 			for (const auto& it : sys.coefficients[i]) {

@@ -14,7 +14,7 @@ u_i System_Equations::num_queue(const S& var) const {
 u_i System_Equations::get_coef_from_combination(const V<u_i> & vars) {
 	u_i coef = 0;
 	for (const auto& it : vars) {
-		coef += (1 << it);
+		coef += ((u_i) 1 << it);
 	}
 
 	return coef;
