@@ -42,12 +42,10 @@ VVS Read::ex_generator(const size_t variables, const size_t equations, bool line
 	std::mt19937_64 generator(std::random_device{}());
 
 	for (auto& eq : answer) {
-		S& table_value = eq[variables];
 		auto num = generator() % max_size;
 		for (const auto& it : System_Equations::get_set_bits(num)) {
-			table_value[it] = '1';
+			eq[variables][it] = '1';
 		}
-
 	}
 
 	return answer;

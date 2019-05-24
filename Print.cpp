@@ -161,11 +161,26 @@ namespace Printer {
 		const std::vector<std::vector<double>>& storage,
 		std::ostream& out
 	) {
+		if (storage.size() == 0 || storage.front().size() == 0) {
+			return;
+		}
+
 		out << "\n\t" << header << " (in seconds)\n";
-		for (const auto& l_it : storage) {
-			for (const auto it : l_it) {
-				out << std::setprecision(3) << it << "  ";
+		for (size_t i = 0; i <= storage.size(); ++i ) {
+			if (i == 0) {
+				out << "v/e\t";
+				for (size_t j = 1; j <= storage.front().size(); ++j) {
+					out << j << "\t";
+				}
+				out << "\n";
+				continue;
 			}
+			
+			out << i << "|\t";
+			for (size_t j = 0; j < storage[i - 1].size(); ++j) {
+				out << std::setprecision(2) << storage[i - 1][j] << "\t";
+			}
+			out << "\n";
 		}
 	}
 }
