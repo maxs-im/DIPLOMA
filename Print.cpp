@@ -1,7 +1,7 @@
 #include "Print.h"
 
 namespace Printer {
-	void Printer::print_logs(
+	void print_logs(
 		const System_Equations& sys,
 		std::ostream& out
 	) {
@@ -154,5 +154,18 @@ namespace Printer {
 		}
 
 		out << "\t" << std::string(title.length(), '-') << "\n";
+	}
+
+	void print_test(
+		const std::string& header,
+		const std::vector<std::vector<double>>& storage,
+		std::ostream& out
+	) {
+		out << "\n\t" << header << " (in seconds)\n";
+		for (const auto& l_it : storage) {
+			for (const auto it : l_it) {
+				out << std::setprecision(3) << it << "  ";
+			}
+		}
 	}
 }

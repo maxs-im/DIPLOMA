@@ -14,7 +14,7 @@ bool CommandParser::is_exists(const std::string& flag) const {
 }
 
 CommandParser::CommandParser(int argc, char* argv[]) {
-	tokens.reserve(argc - 1);
+	tokens.reserve((size_t) argc - 1);
 	for (int i = 1; i < argc; ++i)
 		tokens.push_back(std::string(argv[i]));
 }
