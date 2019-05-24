@@ -159,6 +159,7 @@ namespace Printer {
 	void print_test(
 		const std::string& header,
 		const std::vector<std::vector<double>>& storage,
+		size_t (*convert)(size_t),
 		std::ostream& out
 	) {
 		if (storage.size() == 0 || storage.front().size() == 0) {
@@ -170,13 +171,13 @@ namespace Printer {
 			if (i == 0) {
 				out << "v/e\t";
 				for (size_t j = 1; j <= storage.front().size(); ++j) {
-					out << j << "\t";
+					out << convert(j) << "\t";
 				}
 				out << "\n";
 				continue;
 			}
 			
-			out << i << "|\t";
+			out << convert(i) << "|\t";
 			for (size_t j = 0; j < storage[i - 1].size(); ++j) {
 				out << std::setprecision(2) << storage[i - 1][j] << "\t";
 			}

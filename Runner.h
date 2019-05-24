@@ -16,6 +16,7 @@ namespace Runner {
 	std::vector<std::vector<double>> run_test(
 		const Options& opt,
 		std::ostream& out,
+		size_t (*convert)(size_t),
 		bool is_linear = false
 	) throw (...);
 }

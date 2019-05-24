@@ -32,8 +32,9 @@ int main(int argc, char *argv[]) {
 
 	try {
 		if (opt.is_testing()) {
-			Printer::print_test("TSS", Runner::run_test(opt, *out, true), *out);
-			Printer::print_test("Quine", Runner::run_test(opt, *out, false), *out);
+			auto fn = [](size_t index) -> size_t {return index * 5; };
+			Printer::print_test("TSS", Runner::run_test(opt, *out, fn, true), fn, *out);
+			Printer::print_test("Quine", Runner::run_test(opt, *out, fn, false), fn, *out);
 		}
 		else {
 			Runner::run_program(opt, Read::read_file(*in), *out);

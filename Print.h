@@ -39,6 +39,7 @@ namespace Printer {
 	void print_test(
 		const std::string& header,
 		const std::vector<std::vector<double>>& time,
+		size_t (*convert)(size_t),
 		std::ostream& out
 	);
 }
