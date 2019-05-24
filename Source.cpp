@@ -1,8 +1,7 @@
 #include "Read.h"
-#include "Zhegalkin.h"
 #include "Command.h"
-#include "Print.h"
-#include "Timer.h"
+#include "Runner.h"
+
 #include <iostream>
 #include <fstream>
 
@@ -12,7 +11,7 @@ bool try_file(const T& stream, F& file, const std::string& name);
 int main(int argc, char *argv[]) {
 	auto cmd = CommandParser(argc, argv);
 	Options opt(CMDHelper::work_with_cmd(cmd));
-	
+
 	std::ofstream file_out;
 	std::ifstream file_in;
 
@@ -32,25 +31,13 @@ int main(int argc, char *argv[]) {
 	}
 
 	try {
-		auto x = Read::read_file(*in);
-		Timer time;
-		auto sys = System_Equations(x);
-		auto creation_time = time.elapsed();
-
-		time.reset();
-		auto answers = sys.resolve();
-		auto resolving_time = time.elapsed();
-
-		if (opt.logs) {
-			Printer::print_logs(sys, *out);
+		if (opt.is_testing()) {
+			Printer::print_test("TSS", Runner::run_test(opt, *out, true), *out);
+			Printer::print_test("Quine", Runner::run_test(opt, *out, false), *out);
 		}
-
-		if (opt.timer) {
-			Printer::print_time(creation_time, resolving_time, opt.logs, *out);
+		else {
+			Runner::run_program(opt, Read::read_file(*in), *out);
 		}
-
-		Printer::print_system(sys, *out);
-		Printer::print_answers(answers, sys.vocabulary, *out);
 	}
 	catch (std::string e) {
 		*out << "Program catches exception: \"" + e + "\". Contact to developers!\n\n";
