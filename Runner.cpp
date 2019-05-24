@@ -28,14 +28,11 @@ namespace Runner {
 
 	std::vector<std::vector<double>> run_test(const Options& opt, std::ostream& out, bool is_linear) throw (...) {
 		// x - variables, y - equations
-		std::vector<std::vector<double>> storage;
+		std::vector<std::vector<double>> storage(opt.random.first, std::vector<double>(opt.random.second, 0));
 
-		storage.reserve(opt.random.first);
 		for (size_t v = 1; v <= opt.random.first; ++v) {
-			storage[v - 1].reserve(opt.random.second);
 			for (size_t e = 1; v <= opt.random.second; ++e) {
-				auto time = run_program(opt, Read::ex_generator(v, e, is_linear), out, true);
-				storage[v - 1].push_back(time);
+				storage[v - 1][e - 1] = run_program(opt, Read::ex_generator(v, e, is_linear), out, true);
 			}
 		}
 
