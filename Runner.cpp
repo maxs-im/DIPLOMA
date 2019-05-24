@@ -31,7 +31,7 @@ namespace Runner {
 		std::vector<std::vector<double>> storage(opt.random.first, std::vector<double>(opt.random.second, 0));
 
 		for (size_t v = 1; v <= opt.random.first; ++v) {
-			for (size_t e = 1; v <= opt.random.second; ++e) {
+			for (size_t e = 1; e <= opt.random.second; ++e) {
 				storage[v - 1][e - 1] = run_program(opt, Read::ex_generator(v, e, is_linear), out, true);
 			}
 		}
