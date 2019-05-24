@@ -201,7 +201,7 @@ V<V<u_i>> TSS::prepare_coefs(V<V<u_i>> coefs, const u_i range) throw(...) {
 		reduce(equation);
 		if ((equation.size() == 1) && equation[0] == 0) {
 			// 1 = 0
-			throw "Incorrect parsing for TSS. Contact to developers";
+			throw "Incorrect parsing for TSS. Contact to developers!";
 		}
 		if (equation.size() == 0) {
 			coefs.erase(coefs.begin() + i);

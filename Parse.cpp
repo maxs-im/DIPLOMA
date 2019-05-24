@@ -1,4 +1,4 @@
-#include "Parse.h";
+#include "Parse.h"
 #include "templates.h"
 
 Parsing::Error::Error(const ErrorsId _id, bool _is_Table, const S& _info = "") 

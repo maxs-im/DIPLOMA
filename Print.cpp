@@ -20,7 +20,7 @@ namespace Printer {
 	}
 
 	void print_answers(
-		const std::pair<std::vector<unsigned long long>, std::vector<unsigned long long>>& answers,
+		const std::pair<std::vector<size_t>, std::vector<size_t>>& answers,
 		const std::set<std::string> vocabulary,
 		std::ostream& out
 	) {
@@ -44,7 +44,7 @@ namespace Printer {
 
 	void print_block(
 		const std::set<std::string>& vocabulary,
-		const std::vector<unsigned long long>& answers,
+		const std::vector<size_t>& answers,
 		const std::string& title,
 		std::ostream& out
 	) {
@@ -55,9 +55,9 @@ namespace Printer {
 			}
 			out << "\n";
 			for (const auto s_it : answers) {
-				unsigned long long i = 0;
+				size_t i = 0;
 				for (auto it = vocabulary.begin(); it != vocabulary.end(); ++it, ++i) {
-					out << ((s_it & ((unsigned long long) 1 << i)) ? 1 : 0) << " \t";
+					out << ((s_it & ((size_t) 1 << i)) ? 1 : 0) << " \t";
 				}
 				out << "\n";
 			}
@@ -117,7 +117,7 @@ namespace Printer {
 		out << "\t" << title << "\n";
 
 		const std::vector<std::string> variables(sys.vocabulary.begin(), sys.vocabulary.end());
-		const auto get_polynom = [&variables](const unsigned long long num) -> std::string {
+		const auto get_polynom = [&variables](const size_t num) -> std::string {
 			std::string polyn;
 			for (const auto index : System_Equations::get_set_bits(num)) {
 				polyn += variables[index] + " ";
@@ -125,14 +125,14 @@ namespace Printer {
 
 			return polyn;
 		};
-		const unsigned long long eq_num = sys.coefficients.size();
-		const auto get_sep = [eq_num](const unsigned long long i) -> char {
+		const size_t eq_num = sys.coefficients.size();
+		const auto get_sep = [eq_num](const size_t i) -> char {
 			if (i == (eq_num - 1)) return i ? '\\' : ' ';
 			else if (i == 0) return '/';
 			else return '|';
 		};
 	
-		for (unsigned long long i = 0; i < eq_num; ++i) {
+		for (size_t i = 0; i < eq_num; ++i) {
 			bool has_zero(false);
 			std::string equation;
 			for (const auto& it : sys.coefficients[i]) {

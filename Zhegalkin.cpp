@@ -1,14 +1,14 @@
 #include "Zhegalkin.h"
 #include "templates.h"
 
-u_i System_Equations::num_queue(const S& var) const {
+u_i System_Equations::num_queue(const S& var) const throw (...) {
 	auto itr = vocabulary.begin();
-	for (auto i = 0; itr != vocabulary.end(); ++i, ++itr) {
+	for (u_i i = 0; itr != vocabulary.end(); ++i, ++itr) {
 		if (*itr == var)
 			return i;
 	}
 
-	return -1;
+	throw "Something goes wrong with vocabulary. Contact to developers!";
 }
 
 u_i System_Equations::get_coef_from_combination(const V<u_i> & vars) {
