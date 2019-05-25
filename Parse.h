@@ -29,11 +29,11 @@ public:
 
 		std::string info;
 		ErrorsId id;
-		int index;
+		size_t index;
 		bool is_Table;
 
 		Error(const ErrorsId _id, bool _is_Table, const std::string& _info);
-		void set_index(int index);
+		void set_index(size_t index);
 
 		std::string get_error() const;
 	};

@@ -11,14 +11,14 @@ namespace Printer {
 	);
 
 	void print_answers(
-		const std::pair<std::vector<unsigned int>, std::vector<unsigned int>>& answers,
+		const std::pair<std::vector<size_t>, std::vector<size_t>>& answers,
 		const std::set<std::string> vocabulary,
 		std::ostream& out
 	);
 
 	void print_block(
 		const std::set<std::string>& vocabulary,
-		const std::vector<unsigned int>& answers,
+		const std::vector<size_t>& answers,
 		const std::string& title,
 		std::ostream& out
 	);
