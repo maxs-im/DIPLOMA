@@ -166,12 +166,13 @@ namespace Printer {
 			return;
 		}
 
+		std::string separator("\t\t");
 		out << "\n\t" << header << " (in seconds)\n";
 		for (size_t i = 0; i <= storage.size(); ++i ) {
 			if (i == 0) {
 				out << "v/e\t";
 				for (size_t j = 1; j <= storage.front().size(); ++j) {
-					out << convert(j) << "\t";
+					out << convert(j) << separator;
 				}
 				out << "\n";
 				continue;
@@ -179,7 +180,7 @@ namespace Printer {
 			
 			out << convert(i) << "|\t";
 			for (size_t j = 0; j < storage[i - 1].size(); ++j) {
-				out << std::setprecision(2) << storage[i - 1][j] << "\t";
+				out << storage[i - 1][j] << separator;
 			}
 			out << "\n";
 		}

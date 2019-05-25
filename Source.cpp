@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 
 	try {
 		if (opt.is_testing()) {
-			auto fn = [](size_t index) -> size_t {return index * 5; };
+			auto fn = [](size_t index) -> size_t {return index; };
 			Printer::print_test("TSS", Runner::run_test(opt, *out, fn, true), fn, *out);
 			Printer::print_test("Quine", Runner::run_test(opt, *out, fn, false), fn, *out);
 		}

@@ -25,7 +25,7 @@ Options::Options() :
 	timer(false),
 	input_file(""),
 	output_file(""),
-	random(std::make_pair(0, 0))
+	random(std::make_pair(20, 20))
 {}
 
 Options CMDHelper::work_with_cmd(const CommandParser& cmd) {
