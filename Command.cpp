@@ -25,7 +25,7 @@ Options::Options() :
 	timer(false),
 	input_file(""),
 	output_file(""),
-	random(std::make_pair(20, 20))
+	random(std::make_pair(0, 0))
 {}
 
 Options CMDHelper::work_with_cmd(const CommandParser& cmd) {
@@ -87,7 +87,7 @@ void Options::set_test(const std::string& str) {
 	}
 
 	// default value for flag
-	size_t def_val = 50;
+	size_t def_val = 20;
 	if (random.first == 0) {
 		random.first = def_val;
 	}
