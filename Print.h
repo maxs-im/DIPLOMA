@@ -1,6 +1,7 @@
 #pragma once
 #include "Zhegalkin.h"
 #include <iostream>
+#include <iomanip>
 
 namespace Printer {
 	void print_help(std::ostream& out);
@@ -32,6 +33,13 @@ namespace Printer {
 
 	void print_system(
 		const System_Equations& sys,
+		std::ostream& out
+	);
+
+	void print_test(
+		const std::string& header,
+		const std::vector<std::vector<double>>& time,
+		size_t (*convert)(size_t),
 		std::ostream& out
 	);
 }

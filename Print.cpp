@@ -1,7 +1,7 @@
 #include "Print.h"
 
 namespace Printer {
-	void Printer::print_logs(
+	void print_logs(
 		const System_Equations& sys,
 		std::ostream& out
 	) {
@@ -154,5 +154,35 @@ namespace Printer {
 		}
 
 		out << "\t" << std::string(title.length(), '-') << "\n";
+	}
+
+	void print_test(
+		const std::string& header,
+		const std::vector<std::vector<double>>& storage,
+		size_t (*convert)(size_t),
+		std::ostream& out
+	) {
+		if (storage.size() == 0 || storage.front().size() == 0) {
+			return;
+		}
+
+		std::string separator("\t\t");
+		out << "\n\t" << header << " (in seconds)\n";
+		for (size_t i = 0; i <= storage.size(); ++i ) {
+			if (i == 0) {
+				out << "v/e\t";
+				for (size_t j = 1; j <= storage.front().size(); ++j) {
+					out << convert(j) << separator;
+				}
+				out << "\n";
+				continue;
+			}
+			
+			out << convert(i) << "|\t";
+			for (size_t j = 0; j < storage[i - 1].size(); ++j) {
+				out << storage[i - 1][j] << separator;
+			}
+			out << "\n";
+		}
 	}
 }
