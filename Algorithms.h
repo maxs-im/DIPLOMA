@@ -17,7 +17,7 @@ public:
 		const size_t _range
 	);
 
-	std::pair<std::vector<size_t>, std::vector<size_t>> solve();
+	std::pair<std::vector<size_t>, std::vector<size_t>> solve(bool prefer_Quine = false);
 };
 
 // interface for our algorithms

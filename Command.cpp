@@ -23,6 +23,7 @@ Options::Options() :
 	help(false),
 	logs(false),
 	timer(false),
+	prefer_universal(false),
 	input_file(""),
 	output_file(""),
 	random(std::make_pair(0, 0))
@@ -36,6 +37,8 @@ Options CMDHelper::work_with_cmd(const CommandParser& cmd) {
 	opt.logs = cmd.is_exists("-l");
 	// timer
 	opt.timer = cmd.is_exists("-t");
+	// universal
+	opt.prefer_universal = cmd.is_exists("-u");
 
 	std::string command;
 	// input file

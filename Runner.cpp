@@ -1,13 +1,13 @@
 #include "Runner.h"
 
 namespace Runner {
-	double run_program(const Options& opt, const std::vector<std::vector<std::string>>& data, std::ostream& out, bool test_case) throw (...) {
+	double run_program(const Options& opt, const std::vector<std::vector<std::string>>& data, std::ostream& out, bool test_case, bool prefer_universal) throw (...) {
 		Timer time;
 		auto sys = System_Equations(data);
 		auto creation_time = time.elapsed();
 
 		time.reset();
-		auto answers = sys.resolve();
+		auto answers = sys.resolve(prefer_universal);
 		auto resolving_time = time.elapsed();
 
 		if (opt.logs) {
@@ -30,14 +30,15 @@ namespace Runner {
 		const Options& opt,
 		std::ostream& out,
 		size_t (*convert)(size_t),
-		bool is_linear
+		bool is_linear,
+		bool prefer_universal
 	) throw (...) {
 		// x - variables, y - equations
 		std::vector<std::vector<double>> storage(opt.random.first, std::vector<double>(opt.random.second, 0));
 
 		for (size_t v = 1; v <= opt.random.first; ++v) {
 			for (size_t e = 1; e <= opt.random.second; ++e) {
-				storage[v - 1][e - 1] = run_program(opt, Read::ex_generator(convert(v), convert(e), is_linear), out, true);
+				storage[v - 1][e - 1] = run_program(opt, Read::ex_generator(convert(v), convert(e), is_linear), out, true, prefer_universal);
 			}
 		}
 

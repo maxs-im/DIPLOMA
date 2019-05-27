@@ -20,7 +20,7 @@ protected:
 public:
 	std::vector<std::vector<size_t>> coefficients;
 
-	std::pair<std::vector<size_t>, std::vector<size_t>> resolve();
+	std::pair<std::vector<size_t>, std::vector<size_t>> resolve(bool prefer_universal = false);
 
 	System_Equations(const std::vector<std::vector<std::string>>& lines);
 

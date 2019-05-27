@@ -1,10 +1,10 @@
 #include "Algorithms.h"
 #include "templates.h"
 
-std::pair<V<u_i>, V<u_i>> Solution::solve() {
+std::pair<V<u_i>, V<u_i>> Solution::solve(bool prefer_Quine) {
 	std::pair<V<u_i>, V<u_i>> vectors;
 
-	if (linear) {
+	if (linear && !prefer_Quine) {
 		auto obj = TSS(this);
 
 		vectors = obj.solve();
@@ -182,10 +182,7 @@ void Quine::step(const V<V<u_i>> & coefs, u_i vec) {
 }
 
 // Note: zero coefficient means Positive value for equation
-Quine::Quine(const Solution * solution) : Method(solution) {
-	if (data_ptr->linear)
-		invalid_call();
-}
+Quine::Quine(const Solution * solution) : Method(solution) {}
 
 std::pair<V<u_i>, V<u_i>> Quine::solve() {
 	answers.clear();

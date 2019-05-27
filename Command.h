@@ -13,7 +13,7 @@ public:
 };
 
 struct Options {
-	bool help, logs, timer;
+	bool help, logs, timer, prefer_universal;
 	// variables : system
 	std::pair<size_t, size_t> random;
 	std::string input_file;
