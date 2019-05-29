@@ -65,8 +65,13 @@ bool Options::is_testing() const {
 
 void Options::set_test(const std::string& str) {
 	std::string buffer = "";
-	for (size_t i = 0; i < str.length(); buffer += str[i], ++i) {
-		if (str[i] == ':' || (i + 1) == str.length()) {
+	const char separator(':');
+
+	for (size_t i = 0; i < str.length(); ++i) {
+		if (str[i] != separator) {
+			buffer += str[i];
+		}
+		if (str[i] == separator || (i + 1) == str.length()) {
 			if (buffer != "") {
 				try {
 					size_t num = std::stoull(buffer);
