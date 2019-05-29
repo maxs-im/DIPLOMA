@@ -49,18 +49,24 @@ V<u_i> System_Equations::convert_table(const V<S> & line) {
 	const S& table = line.back();
 	const V<S> local_vars(line.begin(), line.end() - 1);
 
-	for (u_i i = 0; i < table.length(); ++i) {
-		if (table[i] == Actions::POSITIVE) {
-			// b"10" = 2 (not 1)
-			auto index = table.length() - i - 1;
-			auto local_bits = get_set_bits(index);
-			auto real_bits = convert_to_real(local_bits, local_vars);
-
-			auto coef = get_coef_from_combination(real_bits);
-			coefs.push_back(coef);
+	V<u_i> local_coef;
+	local_coef.reserve(table.length());
+	for (u_i num = 0; num < table.length(); ++num) {
+		if (
+			(table[table.length() - 1 - num] == Actions::POSITIVE) ^ 
+			(local_coef.size() % 2)
+		) {
+			local_coef.push_back(num);
 		}
 	}
 
+	for (const auto& it : local_coef) {
+		auto local_bits = get_set_bits(it);
+		auto real_bits = convert_to_real(local_bits, local_vars);
+
+		auto coef = get_coef_from_combination(real_bits);
+		coefs.push_back(coef);
+	}
 	return coefs;
 }
 V<u_i> System_Equations::convert_polynom(const V<S> & line) {
