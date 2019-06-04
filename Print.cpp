@@ -71,6 +71,7 @@ namespace Printer {
 			"For linear we'll use TSS method. Otherwise, Quine's method\n"
 			"\n\n\tFor more info your could use such flags:\n"
 			"\t\t\"-h\" - to see this info\n"
+			"\t\t\"-rt\" +- f\"v:e\"- start time testing. v,e - numbers of variables & equations\n"
 			"\t\t\"-t\" - to detect the execution time of the main functions\n"
 			"\t\t\"-l\" - something like logs (errors, parsed variables etc.)\n"
 			"\t\t\"-f/-o\" - input/output file directories accordingly\n\n"
@@ -99,6 +100,7 @@ namespace Printer {
 		const bool is_full,
 		std::ostream& out
 	) {
+		out << std::scientific;
 		out << "\n\tTIMER INFO\n";
 		if (is_full) {
 			out << "Time for parsing input (without reading): " << creation_time << " seconds\n";
@@ -166,21 +168,32 @@ namespace Printer {
 			return;
 		}
 
-		std::string separator("\t\t");
+		out << std::scientific;
+		std::string separator("\t");
 		out << "\n\t" << header << " (in seconds)\n";
 		for (size_t i = 0; i <= storage.size(); ++i ) {
 			if (i == 0) {
 				out << "v/e\t";
 				for (size_t j = 1; j <= storage.front().size(); ++j) {
-					out << convert(j) << separator;
+					out << convert(j) << separator << separator;
 				}
 				out << "\n";
+				continue;
+			}
+			// ignore useless case with 1 variable
+			if (convert(i) == 1) {
 				continue;
 			}
 			
 			out << convert(i) << "|\t";
 			for (size_t j = 0; j < storage[i - 1].size(); ++j) {
-				out << storage[i - 1][j] << separator;
+				if (storage[i - 1][j] < 0) {
+					out << "\t#";
+				}
+				else {
+					out << storage[i - 1][j];
+				}
+				out << separator;
 			}
 			out << "\n";
 		}
