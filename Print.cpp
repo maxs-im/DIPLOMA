@@ -165,38 +165,39 @@ namespace Printer {
 		std::function<size_t(size_t)> convert,
 		std::ostream& out
 	) {
-		if (storage.size() == 0 || storage.front().size() == 0) {
+		// Note: ignore useless case with 1 variable
+		const bool ignore_v1(convert(1) == 1);
+		if (storage.size() == 0 || 
+			storage.front().size() == (ignore_v1 ? 1 : 0)
+		) {
 			return;
 		}
 
 		out << std::scientific;
 		std::string separator("\t");
 		out << "\n\t" << header << " (in seconds)\n";
-		for (size_t i = 0; i <= storage.size(); ++i ) {
-			if (i == 0) {
-				out << "v/e\t";
-				for (size_t j = 1; j <= storage.front().size(); ++j) {
-					out << convert(j) << separator << separator;
+
+		for (size_t e = 0; e <= storage.size(); ++e ) {
+			if (e == 0) {
+				out << "e/v\t";
+				for (size_t v = ignore_v1 ? 2 : 1; v <= storage.front().size(); ++v) {
+					out << separator << convert(v) << separator;
 				}
-				out << "\n";
-				continue;
 			}
-			// ignore useless case with 1 variable
-			if (convert(i) == 1) {
-				continue;
-			}
-			
-			out << convert(i) << "|\t";
-			for (size_t j = 0; j < storage[i - 1].size(); ++j) {
-				if (storage[i - 1][j] < 0) {
-					out << "\t#";
+			else {
+				out << convert(e) << "|\t";
+				const auto& line = storage[e - 1];
+				for (size_t v = ignore_v1 ? 1 : 0; v < line.size(); ++v) {
+					if (line[v] < 0) {
+						out << "\t#";
+					}
+					else {
+						out << line[v];
+					}
+					out << separator;
 				}
-				else {
-					out << storage[i - 1][j];
-				}
-				out << separator;
 			}
-			out << "\n";
+			out << "\n\n";
 		}
 	}
 }

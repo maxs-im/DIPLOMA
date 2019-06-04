@@ -34,12 +34,15 @@ namespace Runner {
 		bool prefer_universal
 	) throw (...) {
 		// x - variables, y - equations
-		std::vector<std::vector<double>> storage(opt.random.first, std::vector<double>(opt.random.second, -1));
+		std::vector<std::vector<double>> storage(opt.random.second, std::vector<double>(opt.random.first, -1));
 
-		for (size_t v = 2; v <= opt.random.first; ++v) {
-			for (size_t e = 1; e <= opt.random.second; ++e) {
-				if (((size_t) 1 << v) >= e) {
-					storage[v - 1][e - 1] = run_program(opt, Read::ex_generator(convert(v), convert(e), is_linear), out, true, prefer_universal);
+		for (size_t v = 0; v < opt.random.first; ++v) {
+			auto vars = convert(v + 1);
+			size_t max_combinations = (size_t) 1 << vars;
+			for (size_t e = 0; e < opt.random.second; ++e) {
+				auto eqs = convert(e + 1);
+				if (max_combinations >= eqs) {
+					storage[e][v] = run_program(opt, Read::ex_generator(vars, eqs, is_linear), out, true, prefer_universal);
 				}
 			}
 		}
