@@ -104,13 +104,12 @@ void Options::set_test(const std::string& str) {
 		}
 	}
 
-	// default value for flag
-	size_t def_val = 20;
+	// default values for flag
 	if (random.first == 0) {
-		random.first = def_val;
+		random.first = 8;
 	}
 	if (random.second == 0) {
-		random.second = def_val;
+		random.second = 20;
 	}
 }
 

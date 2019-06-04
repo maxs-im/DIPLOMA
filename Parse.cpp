@@ -43,7 +43,7 @@ bool Parsing::is_from_table(const V<S>& line) const {
 
 Parsing::Error Parsing::parse_table(const V<S>& tokens) {
 	const auto& table = tokens.back();
-	auto combinations_number = pow(2, tokens.size() - 1);
+	auto combinations_number = 1 << (tokens.size() - 1);
 	// "x y 11" || "111"
 	if (combinations_number != table.length()) {
 		return Error(Error::ErrorsId::NUMBER, true);
@@ -63,30 +63,27 @@ Parsing::Error Parsing::parse_table(const V<S>& tokens) {
 			return Error(Error::ErrorsId::GENERAL, true);
 	}
 
-	// case with all null x y 0000  <=>  0 = 0
+	// case with all same bits
 	bool ignore = true;
 	for (u_i i = 0; i < table.length(); ++i) {
 		// "x y 1?00"
-		switch (table[i])
-		{
-		case Actions::NEGATIVE:
-			continue;
-		case Actions::POSITIVE:
-			if (ignore && (i == table.length() - 1)) {
-				// x 01  <=>  1 = 0
-				return Error(Error::ErrorsId::INCOMPATIBILITY, true, "0...01 case without variables");
-			}
-			else {
+		if (
+			table[i] != Actions::NEGATIVE &&
+			table[i] != Actions::POSITIVE
+		) {
+			return Error(Error::ErrorsId::BIT, true, S(1, table[i]));
+		}
+
+		if (ignore) {
+			if (table[0] != table[i]) {
 				ignore = false;
 			}
-			continue;
-		default:
-			return Error(Error::ErrorsId::BIT, true, S(1, table[i]));
 		}
 	}
 
 	if (ignore) {
-		return Error(Error::ErrorsId::IGNORE, true, "0..0 case without variables");
+		auto bit = S(1, table[0]);
+		return Error(Error::ErrorsId::INCOMPATIBILITY, true, bit + "..." + bit + " constant function");
 	}
 
 	std::unordered_set<S> buf_variables(tokens.begin(), tokens.end() - 1);
