@@ -72,6 +72,7 @@ namespace Printer {
 			"\n\n\tFor more info your could use such flags:\n"
 			"\t\t\"-h\" - to see this info\n"
 			"\t\t\"-rt\" +- f\"v:e\"- start time testing. v,e - numbers of variables & equations\n"
+			"\t\t\"-s\" - helper for testing. Get number of step. If > 0 -> add, if < 0 - multiply each step\n"
 			"\t\t\"-t\" - to detect the execution time of the main functions\n"
 			"\t\t\"-l\" - something like logs (errors, parsed variables etc.)\n"
 			"\t\t\"-f/-o\" - input/output file directories accordingly\n\n"
@@ -161,7 +162,7 @@ namespace Printer {
 	void print_test(
 		const std::string& header,
 		const std::vector<std::vector<double>>& storage,
-		size_t (*convert)(size_t),
+		std::function<size_t(size_t)> convert,
 		std::ostream& out
 	) {
 		if (storage.size() == 0 || storage.front().size() == 0) {

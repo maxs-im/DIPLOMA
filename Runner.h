@@ -17,7 +17,7 @@ namespace Runner {
 	std::vector<std::vector<double>> run_test(
 		const Options& opt,
 		std::ostream& out,
-		size_t (*convert)(size_t),
+		std::function<size_t(size_t)> convert,
 		bool is_linear = false,
 		bool prefer_universal = false
 	) throw (...);
