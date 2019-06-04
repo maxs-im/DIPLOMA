@@ -26,7 +26,8 @@ Options::Options() :
 	prefer_universal(false),
 	input_file(""),
 	output_file(""),
-	random(std::make_pair(0, 0))
+	random(std::make_pair(0, 0)),
+	step(0)
 {}
 
 Options CMDHelper::work_with_cmd(const CommandParser& cmd) {
@@ -51,9 +52,18 @@ Options CMDHelper::work_with_cmd(const CommandParser& cmd) {
 	if (cmd.is_exists(command)) {
 		opt.output_file = cmd.get_value(command);
 	}
+
+	//testing
 	command = "-rt";
 	if (cmd.is_exists(command)) {
 		opt.set_test(cmd.get_value(command));
+	}
+	command = "-s";
+	if (cmd.is_exists(command)) {
+		try {
+			opt.step = std::stoll(cmd.get_value(command));
+		}
+		catch (...) {}
 	}
 
 	return opt;
@@ -101,5 +111,14 @@ void Options::set_test(const std::string& str) {
 	}
 	if (random.second == 0) {
 		random.second = def_val;
+	}
+}
+
+size_t Options::get_index(size_t index) const {
+	if (step < 0) {
+		return index * abs(step);
+	}
+	else {
+		return index + step;
 	}
 }

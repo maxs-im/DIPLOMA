@@ -32,7 +32,10 @@ int main(int argc, char *argv[]) {
 
 	try {
 		if (opt.is_testing()) {
-			auto fn = [](size_t index) -> size_t {return index; };
+			std::function<size_t(size_t)> fn = [&opt](size_t index) -> size_t {
+				return opt.get_index(index);
+			};
+			
 			Printer::print_test("TSS", Runner::run_test(opt, *out, fn, true, opt.prefer_universal), fn, *out);
 			Printer::print_test("Quine", Runner::run_test(opt, *out, fn, false, opt.prefer_universal), fn, *out);
 		}
