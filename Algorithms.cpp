@@ -219,10 +219,26 @@ V<V<u_i>> TSS::prepare_coefs(V<V<u_i>> coefs, const u_i range) throw(...) {
 }
 
 V<u_i> TSS::get_start_vectors(const V<u_i> & first, u_i range) {
+	if (first.size() == 0) {
+		// UNREACHABLE
+		return {};
+	}
+
 	V<u_i> vectors;
 	vectors.reserve(range - 1);
 
-	u_i pillar = first.front();
+	u_i pillar = 1 << (range - 1);
+	
+	// find not from 0 pillar
+	auto iter = std::find_if(first.begin(), first.end(), 
+		[&pillar](u_i curr) {
+			return curr < pillar;
+		}
+	);
+	if (iter != first.end()) {
+		pillar = *iter;
+	}
+	
 	for (u_i j = 0; j < range; ++j) {
 		auto eq_pillar = (u_i) 1 << j;
 		if (pillar == eq_pillar) {
