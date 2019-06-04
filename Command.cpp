@@ -109,7 +109,7 @@ void Options::set_test(const std::string& str) {
 		random.first = 8;
 	}
 	if (random.second == 0) {
-		random.second = 20;
+		random.second = 14;
 	}
 }
 
