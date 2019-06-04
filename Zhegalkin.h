@@ -12,6 +12,7 @@ protected:
 	);
 	
 	size_t get_coef_from_combination(const std::vector<size_t>& vars);
+	std::vector<size_t> get_pascal_coefs(const std::string& table);
 
 	std::vector<size_t> convert_table(const std::vector<std::string>& line);
 	std::vector<size_t> convert_polynom(const std::vector<std::string>& line);

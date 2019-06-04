@@ -43,22 +43,37 @@ V<u_i> System_Equations::convert_to_real(V<u_i> bits, const V<S>& vars) {
 	return bits;
 }
 
+V<u_i> System_Equations::get_pascal_coefs(const S& table) {
+	const auto size = table.length();
+	
+	V<u_i> coefs;
+	coefs.reserve(size);
+
+	// Pascal
+	V<bool> pascal_triangle(size, false);
+	
+	// init bool values
+	for (size_t i = 0; i < size; ++i) {
+		pascal_triangle[i] = table[size - (i + 1)] == Actions::POSITIVE;
+	}
+
+	for (size_t coef = 0; coef < size; ++coef) {
+		if (pascal_triangle.front()) {
+			coefs.push_back(coef);
+		}
+		for (size_t i = 0; i < size - (coef + 1); ++i) {
+			pascal_triangle[i] = pascal_triangle[i] ^ pascal_triangle[i + 1];
+		}
+	}
+
+	return coefs;
+}
+
 V<u_i> System_Equations::convert_table(const V<S> & line) {
 	V<u_i> coefs;
 	coefs.reserve(line.size());
-	const S& table = line.back();
 	const V<S> local_vars(line.begin(), line.end() - 1);
-
-	V<u_i> local_coef;
-	local_coef.reserve(table.length());
-	for (u_i num = 0; num < table.length(); ++num) {
-		if (
-			(table[table.length() - 1 - num] == Actions::POSITIVE) ^ 
-			(local_coef.size() % 2)
-		) {
-			local_coef.push_back(num);
-		}
-	}
+	const V<u_i> local_coef(get_pascal_coefs(line.back()));
 
 	for (const auto& it : local_coef) {
 		auto local_bits = get_set_bits(it);
