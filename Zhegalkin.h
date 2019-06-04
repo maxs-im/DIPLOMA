@@ -12,7 +12,7 @@ protected:
 	);
 	
 	size_t get_coef_from_combination(const std::vector<size_t>& vars);
-	std::vector<size_t> get_pascal_coefs(const std::string& table);
+	std::vector<size_t> get_pascal_coefs(size_t table, const size_t range);
 
 	std::vector<size_t> convert_table(const std::vector<std::string>& line);
 	std::vector<size_t> convert_polynom(const std::vector<std::string>& line);
@@ -25,7 +25,7 @@ public:
 
 	System_Equations(const std::vector<std::vector<std::string>>& lines);
 
-	static std::vector<size_t> get_set_bits(size_t n);
+	static std::vector<size_t> get_set_bits(const size_t n);
 };
 
 

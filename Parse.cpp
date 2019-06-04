@@ -63,6 +63,7 @@ Parsing::Error Parsing::parse_table(const V<S>& tokens) {
 			return Error(Error::ErrorsId::GENERAL, true);
 	}
 
+	u_i number(0);
 	// case with all same bits
 	bool ignore = true;
 	for (u_i i = 0; i < table.length(); ++i) {
@@ -79,6 +80,11 @@ Parsing::Error Parsing::parse_table(const V<S>& tokens) {
 				ignore = false;
 			}
 		}
+
+		number <<= 1;
+		if (table[i] == Actions::POSITIVE) {
+			number += 1;
+		}
 	}
 
 	if (ignore) {
@@ -94,7 +100,7 @@ Parsing::Error Parsing::parse_table(const V<S>& tokens) {
 
 	// save maybe new variables
 	vocabulary.insert(buf_variables.begin(), buf_variables.end());
-	return Error(Error::ErrorsId::NONE, true);
+	return Error(Error::ErrorsId::NONE, true, std::to_string(number));
 }
 
 Parsing::Error Parsing::parse_polynom(const V<S> & tokens) {
@@ -167,7 +173,7 @@ Parsing::Error Parsing::parse_line(const V<S> & line) {
 
 Parsing::Parsing(const V<V<S>>& lines) {
 	for (u_i i = 0; i < lines.size(); ++i) {
-		const V<S>& line = lines[i];
+		V<S> line = lines[i];
 
 		if (std::find(line.begin(), line.end(), "") != line.end()) {
 			// UNREACHABLE
@@ -176,6 +182,9 @@ Parsing::Parsing(const V<V<S>>& lines) {
 
 		auto error = parse_line(line);
 		if (error.id == Error::ErrorsId::NONE) {
+			if (error.is_Table) {
+				line[line.size() - 1] = error.info;
+			}
 			equations.push_back(line);
 		}
 		else {

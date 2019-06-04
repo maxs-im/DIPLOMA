@@ -20,7 +20,7 @@ u_i System_Equations::get_coef_from_combination(const V<u_i> & vars) {
 	return coef;
 }
 
-V<u_i> System_Equations::get_set_bits(u_i n) {
+V<u_i> System_Equations::get_set_bits(const u_i n) {
 	V<u_i> nums;
 	u_i pos = 0;
 	u_i mask = 1;
@@ -43,27 +43,19 @@ V<u_i> System_Equations::convert_to_real(V<u_i> bits, const V<S>& vars) {
 	return bits;
 }
 
-V<u_i> System_Equations::get_pascal_coefs(const S& table) {
-	const auto size = table.length();
+V<u_i> System_Equations::get_pascal_coefs(u_i table, const u_i range) {	
+	const auto combinations((u_i) 1 << range),
+		mask((u_i) 1 << (combinations - 1));
 	
 	V<u_i> coefs;
-	coefs.reserve(size);
+	coefs.reserve(combinations);
 
-	// Pascal
-	V<bool> pascal_triangle(size, false);
-	
-	// init bool values
-	for (size_t i = 0; i < size; ++i) {
-		pascal_triangle[i] = table[size - (i + 1)] == Actions::POSITIVE;
-	}
-
-	for (size_t coef = 0; coef < size; ++coef) {
-		if (pascal_triangle.front()) {
+	for (size_t coef = 0; coef < combinations; ++coef) {
+		if (table & 1) {
 			coefs.push_back(coef);
 		}
-		for (size_t i = 0; i < size - (coef + 1); ++i) {
-			pascal_triangle[i] = pascal_triangle[i] ^ pascal_triangle[i + 1];
-		}
+		
+		table ^= (table >> 1);
 	}
 
 	return coefs;
@@ -73,7 +65,7 @@ V<u_i> System_Equations::convert_table(const V<S> & line) {
 	V<u_i> coefs;
 	coefs.reserve(line.size());
 	const V<S> local_vars(line.begin(), line.end() - 1);
-	const V<u_i> local_coef(get_pascal_coefs(line.back()));
+	const V<u_i> local_coef(get_pascal_coefs(std::stoull(line.back()), line.size() - 1));
 
 	for (const auto& it : local_coef) {
 		auto local_bits = get_set_bits(it);
