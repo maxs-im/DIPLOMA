@@ -10,7 +10,9 @@ For more info your could use such flags:
 - __-h__ - to see this info;
 - __-t__ - to detect the execution time of the main functions;
 - __-l__ - something like logs (errors, parsed variables etc.);
-- __-f/-o__ - input/output file directories accordingly;
+- __-f/-o__ [path] - input/output file directories accordingly;
+- __-rt__ [v:e] - start time testing. v,e - numbers of variables & equations (# - means useless ignoring test case);
+- __-s__ [num] - helper for testing. Get number of step. If num > 0 -> add, if num < 0 - multiply each step;
 
 ## How to write correct input?
 You should to know some rules:
