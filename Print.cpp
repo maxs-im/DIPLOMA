@@ -175,7 +175,7 @@ namespace Printer {
 
 		out << std::scientific;
 		std::string separator("\t");
-		out << "\n\t" << header << " (in seconds)\n";
+		out << "\t" << header << " (in seconds)\n";
 
 		for (size_t e = 0; e <= storage.size(); ++e ) {
 			if (e == 0) {
